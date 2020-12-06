@@ -7,6 +7,7 @@ const pos_page_router = require('./pos-page');
 const shipments_page_router = require('./shipments-page');
 const add_shipment_router = require('./add-shipment-page');
 const products_page_router = require('./products-page');
+const categories_page_router = require('./categories-page');
 
 router.use('/home', home_page_router);
 
@@ -19,5 +20,8 @@ router.use('/shipments', shipments_page_router);
 router.use('/add-shipment', add_shipment_router);
 
 router.use('/products', products_page_router);
+
+router.use('/categories', categories_page_router);
+
 
 module.exports = router;
