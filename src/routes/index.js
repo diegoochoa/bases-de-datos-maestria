@@ -6,6 +6,7 @@ const login_page_router = require('./login-page');
 const pos_page_router = require('./pos-page');
 const shipments_page_router = require('./shipments-page');
 const add_shipment_router = require('./add-shipment-page');
+const products_page_router = require('./products-page');
 
 router.use('/home', home_page_router);
 
@@ -16,5 +17,7 @@ router.use('/pos', pos_page_router);
 router.use('/shipments', shipments_page_router);
 
 router.use('/add-shipment', add_shipment_router);
+
+router.use('/products', products_page_router);
 
 module.exports = router;
