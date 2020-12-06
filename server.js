@@ -1,8 +1,9 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const router = require('./src/routes');
-
+const mysqlConnection1 = require('./connection');
 const app = express();
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
@@ -25,4 +26,8 @@ module.exports = {
   app
 };
 
-module.exports.stop = () => server.close();
+module.exports.stop = () => {
+  conexionSitio1.end();
+  conexionSitio2.end();
+  server.close();
+}
