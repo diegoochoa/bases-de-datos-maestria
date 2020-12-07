@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.use('/', bodyParser.raw({ type: 'application/octet-stream', limit: '10MB' }));
 
-router.get('/', check_format, categories_controller);
+router.get('/', check_format, categories_controller.list);
 
 module.exports = router;

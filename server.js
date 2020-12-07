@@ -27,7 +27,5 @@ module.exports = {
 };
 
 module.exports.stop = () => {
-  conexionSitio1.end();
-  conexionSitio2.end();
   server.close();
 }
