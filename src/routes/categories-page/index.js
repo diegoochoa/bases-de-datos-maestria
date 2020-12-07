@@ -8,4 +8,14 @@ router.use('/', bodyParser.raw({ type: 'application/octet-stream', limit: '10MB'
 
 router.get('/', check_format, categories_controller.list);
 
+router.get('/add', check_format, categories_controller.add);
+
+router.post('/save', check_format, categories_controller.save);
+
+router.get('/delete/:id', check_format, categories_controller._delete);
+
+router.get('/edit/:id', check_format, categories_controller.edit);
+
+router.post('/update/:id', check_format, categories_controller.update);
+
 module.exports = router;

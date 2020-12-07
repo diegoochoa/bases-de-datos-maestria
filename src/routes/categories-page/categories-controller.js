@@ -16,6 +16,52 @@ async function list(req, res) {
   });
 }
 
+async function add(req, res) {
+  res.render('add-category', {
+    data: null
+  });
+}
+
+async function save(req, res) {
+  const data = req.body;
+
+  sitio2.query('INSERT INTO categorias SET ?', [data], (err, rows) =>{
+    res.redirect('/categories');
+  });
+}
+
+async function _delete(req, res) {
+  const id = req.params.id;
+
+  sitio2.query('DELETE FROM categorias WHERE id = ?', [id], (err, rows) =>{
+    res.redirect('/categories');
+  });
+}
+
+async function edit(req, res) {
+  const id = req.params.id;
+
+  sitio2.query('SELECT * FROM categorias WHERE id = ?', [id], (err, rows) =>{
+    res.render('add-category', {
+      data: rows[0]
+    });
+  });
+}
+
+async function update(req, res) {
+  const id = req.params.id;
+  const data = req.body;
+
+  sitio2.query('UPDATE categorias SET ? WHERE id = ?', [data, id], (err, rows) =>{
+    res.redirect('/categories');
+  });
+}
+
 module.exports = {
-  list
+  list,
+  add,
+  save,
+  _delete,
+  edit,
+  update
 };
