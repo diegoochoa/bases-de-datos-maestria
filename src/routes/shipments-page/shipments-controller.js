@@ -31,7 +31,7 @@ async function list(req, res) {
 
 async function _delete(req, res) {
   const id = req.params.numero_guia;
-  console.log(id);
+
   sitio1.query('DELETE FROM envios WHERE numero_guia = ?', [id], (err, rows) => {
     res.redirect('/shipments');
   });
