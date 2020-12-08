@@ -10,6 +10,8 @@ async function list(req, res) {
     if (err)
       res.json(err);
 
+      console.log(rows);
+
     res.render('categories', {
       data: rows
     });
