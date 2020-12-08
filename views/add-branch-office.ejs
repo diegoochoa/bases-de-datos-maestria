@@ -1,0 +1,149 @@
+<%- include("./partials/header") %>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-6">
+            <h4>Agregar Sucursal</h4>
+        </div>
+    </div>
+</div>
+
+<div class="container bg-gray">
+    <div class="justify-content-center align-self-center">
+        <% if(!data) { %>
+        <form action="/branch-offices/save" method="POST">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre">
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Calle</label>
+                        <input type="text" name="calle" class="form-control" placeholder="Calle">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Número exterior</label>
+                        <input type="text" name="numero_exterior" class="form-control" placeholder="Número exterior">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Número interior</label>
+                        <input type="text" name="numero_interior" class="form-control" placeholder="Número interior">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Colonia</label>
+                        <input type="text" name="colonia" class="form-control" placeholder="Colonia">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Código postal</label>
+                        <input type="text" name="codigo_postal" class="form-control" placeholder="Código postal">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" name="telefono" class="form-control" placeholder="Teléfono">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <input type="text" name="estado" class="form-control" placeholder="Estado">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Municipio</label>
+                        <input type="text" name="municipio" class="form-control" placeholder="Municipio">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="/branch-offices" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                <button class="btn btn-outline-success" type="submit">Crear Sucursal</button>
+            </div>
+        </form>
+        <% } else { %>
+        <form action="/branch-offices/update/<%= data.id %>" method="POST">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="nombre" value="<%= data.nombre %>" class="form-control" placeholder="Nombre">
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Calle</label>
+                        <input type="text" name="calle" value="<%= data.calle %>" class="form-control" placeholder="Calle">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Número exterior</label>
+                        <input type="text" name="numero_exterior" value="<%= data.numero_exterior %>" class="form-control" placeholder="Número exterior">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Número interior</label>
+                        <input type="text" name="numero_interior" value="<%= data.numero_interior %>" class="form-control" placeholder="Número interior">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Colonia</label>
+                        <input type="text" name="colonia" value="<%= data.colonia %>" class="form-control" placeholder="Colonia">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Código postal</label>
+                        <input type="text" name="codigo_postal" value="<%= data.codigo_postal %>" class="form-control" placeholder="Código postal">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" name="telefono" value="<%= data.telefono %>" class="form-control" placeholder="Teléfono">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <input type="text" name="estado" value="<%= data.estado %>" class="form-control" placeholder="Estado">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Municipio</label>
+                        <input type="text" name="municipio" value="<%= data.municipio %>" class="form-control" placeholder="Municipio">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="/branch-offices" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                <button class="btn btn-outline-success" type="submit">Editar Sucursal</button>
+            </div>
+        </form>
+        <% } %>
+    </div>
+</div>
+
+<%- include("./partials/footer") %>

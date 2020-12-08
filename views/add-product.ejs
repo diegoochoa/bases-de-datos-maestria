@@ -1,0 +1,165 @@
+<%- include("./partials/header") %>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-6">
+            <h4>Agregar Producto</h4>
+        </div>
+    </div>
+</div>
+
+<div class="container bg-gray">
+    <div class="justify-content-center align-self-center">
+        <% if(!data) { %>
+        <form action="/products/save" method="POST">
+            <div class="form-group">
+                <label>Descripción</label>
+                <input type="text" name="descripcion" class="form-control" placeholder="Descripción">
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select name="id_categoria" class="form-control" placeholder="Categoría">
+                            <% if(categorias) { %>
+                            <% for(var categoria of categorias) { %>
+                            <option value="<%= categoria.id %>"><%= categoria.nombre %></option>
+                            <% } %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Sucursal</label>
+                        <select name="id_sucursal" class="form-control" placeholder="Sucursal">
+                            <% if(sucursales) { %>
+                            <% for(var sucursal of sucursales) { %>
+                            <option value="<%= sucursal.id %>"><%= sucursal.nombre %></option>
+                            <% } %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Costo</label>
+                        <input type="text" name="costo" class="form-control" placeholder="Costo">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Precio</label>
+                        <input type="text" name="precio" class="form-control" placeholder="Precio">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Talla</label>
+                        <input type="text" name="talla" class="form-control" placeholder="Talla">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <input type="text" name="marca" class="form-control" placeholder="Marca">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Medidas</label>
+                        <input type="text" name="medidas" class="form-control" placeholder="Medidas">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="/products" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                <button class="btn btn-outline-success" type="submit">Crear Producto</button>
+            </div>
+        </form>
+        <% } else { %>
+        <form action="/products/update/<%= data.id %>" method="POST">
+            <div class="form-group">
+                <label>Descripción</label>
+                <input type="text" name="descripcion" value="<%= data.descripcion %>" class="form-control"
+                    placeholder="Descripción">
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select name="id_categoria" value="<%= data.categoria %>" class="form-control"
+                            placeholder="Categoría">
+                            <% if(categorias) { %>
+                            <% for(var categoria of categorias) { %>
+                            <option value="<%= categoria.id %>"><%= categoria.nombre %></option>
+                            <% } %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Sucursal</label>
+                        <select name="id_sucursal" value="<%= data.sucursal %>" class="form-control"
+                            placeholder="Sucursal">
+                            <% if(sucursales) { %>
+                            <% for(var sucursal of sucursales) { %>
+                            <option value="<%= sucursal.id %>"><%= sucursal.nombre %></option>
+                            <% } %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Costo</label>
+                        <input type="text" name="costo" value="<%= data.costo %>" class="form-control"
+                            placeholder="Costo">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Precio</label>
+                        <input type="text" name="precio" value="<%= data.precio %>" class="form-control"
+                            placeholder="Precio">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Talla</label>
+                        <input type="text" name="talla" value="<%= data.talla %>" class="form-control"
+                            placeholder="Talla">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <input type="text" name="marca" value="<%= data.marca %>" class="form-control"
+                            placeholder="Marca">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Medidas</label>
+                        <input type="text" name="medidas" value="<%= data.medidas %>" class="form-control"
+                            placeholder="Medidas">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="/products" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                <button class="btn btn-outline-success" type="submit">Editar Producto</button>
+            </div>
+        </form>
+        <% } %>
+    </div>
+</div>
+
+<%- include("./partials/footer") %>
