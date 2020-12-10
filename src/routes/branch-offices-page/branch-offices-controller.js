@@ -27,6 +27,29 @@ async function list(req, res) {
     })
 }
 
+async function get() {
+  var sucursales = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection.getConexion("sucursal")
+        .then(sqlconnection => {
+          const tabla = sqlconnection.tabla;
+
+          sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+            if (err)
+              res.json(err);
+
+              return resolve(rows);
+          });
+        })
+        .catch(err => {
+          return resolve([]);
+        })
+    });
+  }
+
+  return await sucursales();
+}
+
 async function add(req, res) {
   res.render('add-branch-office', {
     data: null
@@ -108,6 +131,7 @@ async function update(req, res) {
 
 module.exports = {
   list,
+  get,
   add,
   save,
   _delete,

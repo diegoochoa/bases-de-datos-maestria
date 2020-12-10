@@ -26,6 +26,29 @@ async function list(req, res) {
     })
 }
 
+async function get() {
+  var categorias = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection.getConexion("categoria")
+        .then(sqlconnection => {
+          const tabla = sqlconnection.tabla;
+
+          sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+            if (err)
+              res.json(err);
+
+              return resolve(rows);
+          });
+        })
+        .catch(err => {
+          return resolve([]);
+        })
+    });
+  }
+
+  return await categorias();
+}
+
 async function add(req, res) {
   res.render('add-category', {
     data: null
@@ -107,6 +130,7 @@ async function update(req, res) {
 
 module.exports = {
   list,
+  get,
   add,
   save,
   _delete,

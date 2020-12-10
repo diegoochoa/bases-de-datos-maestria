@@ -53,10 +53,10 @@
                 <th scope="row"><%= product.descripcion %></th>
                 <td>
                     <% if(categorias) { %>
-                    <%= categorias.find(x=>x.id === product.id_categoria).nombre %>
+                    <%= categorias.find(x=>x.id === product.id_categoria) ? categorias.find(x=>x.id === product.id_categoria).nombre : "" %>
                     <%}%>
-                        </td>
-                        <td><%= product.costo %></td>
+                </td>
+                <td><%= product.costo %></td>
                 <td><%= product.precio %></td>
                 <td><%= product.talla %></td>
                 <td><%= product.marca %></td>

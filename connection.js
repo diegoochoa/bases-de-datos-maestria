@@ -38,34 +38,99 @@ async function getConexion(tabla) {
                     res.json(err);
 
                 var row = rows[0];
-                resTabla = row.nombre;
 
-                conexionSitio2.connect(function (error) {
-                    if (!error)
-                        console.log("Conexión exitosa Sitio 2");
-                    else
-                        throw error;
-                });
+                if (row.tipo !== null) {
+                    switch (row.tipo) {
+                        case "Vertical":
+                            resolve();
 
-                conexionSitio1.connect(function (error) {
-                    if (!error)
-                        console.log("Conexión exitosa Sitio 1");
-                    else
-                        throw error;
-                });
+                            break;
+                        case "Horizontal":
+                            for (let fragmento of rows) {
+                                switch (fragmento.sitio) {
+                                    case 1:
+                                        conexionSitio1.connect(function (error) {
+                                            if (!error)
+                                                console.log("Conexión exitosa Sitio 1");
+                                            else
+                                                throw error;
+                                        });
 
-                resConection = {
-                    BD: conexionSitio2,
-                    tabla: resTabla,
-                    condicion: resCondicion
+                                        resConection = {
+                                            BD: conexionSitio1,
+                                            tabla: fragmento.nombre,
+                                            condicion: resCondicion
+                                        }
+
+                                        resolve();
+                                        break;
+                                    case 2:
+                                        conexionSitio2.connect(function (error) {
+                                            if (!error)
+                                                console.log("Conexión exitosa Sitio 2");
+                                            else
+                                                throw error;
+                                        });
+
+                                        resConection = {
+                                            BD: conexionSitio2,
+                                            tabla: fragmento.nombre,
+                                            condicion: resCondicion
+                                        }
+
+                                        resolve();
+                                        break;
+                                }
+                            }
+                            break;
+                        case "Replica":
+                            resolve();
+
+                            break;
+                    }
                 }
+                else {
+                    switch (row.sitio) {
+                        case 1:
+                            conexionSitio1.connect(function (error) {
+                                if (!error)
+                                    console.log("Conexión exitosa Sitio 1");
+                                else
+                                    throw error;
+                            });
 
-                resolve();
+                            resConection = {
+                                BD: conexionSitio1,
+                                tabla: row.nombre,
+                                condicion: resCondicion
+                            }
+
+                            resolve();
+                            break;
+                        case 2:
+                            conexionSitio2.connect(function (error) {
+                                if (!error)
+                                    console.log("Conexión exitosa Sitio 2");
+                                else
+                                    throw error;
+                            });
+
+                            resConection = {
+                                BD: conexionSitio2,
+                                tabla: row.nombre,
+                                condicion: resCondicion
+                            }
+
+                            resolve();
+                            break;
+                    }
+                }
             });
         });
     }
 
     await dataLocalizacion();
+
     return resConection;
 }
 
