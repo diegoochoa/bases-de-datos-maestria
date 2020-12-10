@@ -1,75 +1,130 @@
-
-<html>
-    <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    </head>
-    <body>
-        <div class="text-center w-100 bg-light ">
-            <div class="container text-center mx-auto">
-                <h1>Agregar envío - Bazar de ropa</h1>
-            </div>
+<%- include("./partials/header") %>
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-6">
+            <% if(!data) { %>
+            <h4>Agregar envio</h4>
+            <% } else { %>
+            <h4>Editar envio</h4>
+            <% } %>
         </div>
+    </div>
+</div>
         <div class="container my-5 h-100">
             <div class="jumbotron h-90 my-auto justify-content-center align-self-center text-center bg-light">  
-    
                 <div class="container h-50 my-auto justify-content-center align-self-center text-center">
-                    <div class="row justify-content-center mt-5">
-                        <div class="col-lg align-self-center text-left">
-                            <input type="text" class="form-control" id="num_rastreo" placeholder="Número de guía">
+                    <% if(!data) { %>
+                    <form action="/shipments/save" method="POST">
+                        <div class="row justify-content-center mt-5">
+                            <div class="col-lg align-self-center text-left">
+                                <input type="text" class="form-control" name="numero_guia" placeholder="Número de guía">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row justify-content-center mt-5">
-                        <div class="col-lg align-self-center text-left">
-                            <input type="text" class="form-control" id="telefono" placeholder="Teléfono">
+                        <div class="row justify-content-center mt-5">
+                            <div class="col-lg align-self-center text-left">
+                                <input type="text" class="form-control" name="telefono" placeholder="Teléfono">
+                            </div>
+                            <div class="col-lg align-self-center text-left">
+                                <input type="text" class="form-control" name="calle" placeholder="Calle">
+                            </div>
                         </div>
-                        <div class="col-lg align-self-center text-left">
-                            <input type="text" class="form-control" id="calle" placeholder="Calle">
-                        </div>
-                    </div>
 
-                    <div class="row justify-content-center mt-5">
-                        <div class="col-3 align-self-center text-left">
-                            <input type="text" class="form-control" id="num_ext" placeholder="Número exterior">
+                        <div class="row justify-content-center mt-5">
+                            <div class="col-3 align-self-center text-left">
+                                <input type="text" class="form-control" name="numero_exterior" placeholder="Número exterior">
+                            </div>
+                            <div class="col-3 align-self-center text-left">
+                                <input type="text" class="form-control" name="numero_interior" placeholder="Número interior">
+                            </div>
+                            <div class="col-6 align-self-center text-left">
+                                <input type="text" class="form-control" name="colonia" placeholder="Colonia">
+                            </div>
                         </div>
-                        <div class="col-3 align-self-center text-left">
-                            <input type="text" class="form-control" id="num_int" placeholder="Número interior">
-                        </div>
-                        <div class="col-6 align-self-center text-left">
-                            <input type="text" class="form-control" id="colonia" placeholder="Colonia">
-                        </div>
-                    </div>
 
-                    <div class="row justify-content-center mt-5">
-                        <div class="col-lg align-self-center text-left">
-                            <input type="text" class="form-control" id="estado" placeholder="Estado">
+                        <div class="row justify-content-center mt-5">
+                            <div class="col-lg align-self-center text-left">
+                                <input type="text" class="form-control" name="estado" placeholder="Estado">
+                            </div>
+                            <div class="col-lg align-self-center text-left">
+                                <input type="text" class="form-control" name="municipio" placeholder="Municipio">
+                            </div>
                         </div>
-                        <div class="col-lg align-self-center text-left">
-                            <input type="text" class="form-control" id="municipio" placeholder="Municipio">
-                        </div>
-                    </div>
 
-                    <div class="row mt-5">
-                        <div class="col-3 text-left">
-                            <input type="text" class="form-control" id="cp" placeholder="Código Postal">
-                        </div>
-                    </div>
+                        <div class="row mt-5">
+                            <div class="col-3 text-left">
+                                <input type="text" class="form-control" name="codigo_postal" placeholder="Código Postal">
+                            </div>
 
-                    <div class="row justify-content-center mt-5 text-right">
-                        <div class="col">
-                            <button class="btn btn-outline-success" type="submit">Agregar envío</button>  
+                            <div class="col-3 text-left">
+                                <input type="date" class="form-control" id="fecha" placeholder="Fecha">
+                            </div>
                         </div>
-                    </div>
+
+                        <div class="row justify-content-center mt-5 text-right">
+                            <div class="col">
+                                <button class="btn btn-outline-success" type="submit">Agregar envío</button>  
+                            </div>
+                        </div>
+                    </form>
+                    <% } else { %>
+                        <form action="/shipments/update/<%= data.numero_guia %>" method="POST">
+                            <div class="row justify-content-center mt-5">
+                                <div class="col-lg align-self-center text-left">
+                                    <input type="text" class="form-control" value="<%= data.numero_guia %>" name="numero_guia" placeholder="Número de guía">
+                                </div>
+                            </div>
+    
+                            <div class="row justify-content-center mt-5">
+                                <div class="col-lg align-self-center text-left">
+                                    <input type="text" class="form-control" value="<%= data.telefono %>" name="telefono" placeholder="Teléfono">
+                                </div>
+                                <div class="col-lg align-self-center text-left">
+                                    <input type="text" class="form-control" value="<%= data.calle %>" name="calle" placeholder="Calle">
+                                </div>
+                            </div>
+    
+                            <div class="row justify-content-center mt-5">
+                                <div class="col-3 align-self-center text-left">
+                                    <input type="text" class="form-control" value="<%= data.numero_exterior %>" name="numero_exterior" placeholder="Número exterior">
+                                </div>
+                                <div class="col-3 align-self-center text-left">
+                                    <input type="text" class="form-control" value="<%= data.numero_interior %>" name="numero_interior" placeholder="Número interior">
+                                </div>
+                                <div class="col-6 align-self-center text-left">
+                                    <input type="text" class="form-control" value="<%= data.colonia %>" name="colonia" placeholder="Colonia">
+                                </div>
+                            </div>
+    
+                            <div class="row justify-content-center mt-5">
+                                <div class="col-lg align-self-center text-left">
+                                    <input type="text" class="form-control" value="<%= data.estado %>" name="estado" placeholder="Estado">
+                                </div>
+                                <div class="col-lg align-self-center text-left">
+                                    <input type="text" class="form-control" value="<%= data.municipio %>" name="municipio" placeholder="Municipio">
+                                </div>
+                            </div>
+    
+                            <div class="row mt-5">
+                                <div class="col-3 text-left">
+                                    <input type="text" class="form-control" value="<%= data.codigo_postal %>"name="codigo_postal" placeholder="Código Postal">
+                                </div>
+    
+                                <div class="col-3 text-left">
+                                    <input type="date" class="form-control" value="<%= data.fecha %>" id="fecha" placeholder="Fecha">
+                                </div>
+                            </div>
+    
+                            <div class="row justify-content-center mt-5 text-right">
+                                <div class="col">
+                                    <button class="btn btn-outline-success" type="submit">Guardar envío</button>  
+                                </div>
+                            </div>
+                        </form>
+                        <% } %>
                 </div>
                
             </div>
         </div>
         
-
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-
-    </body>
-</html>
+<%- include("./partials/footer") %>
