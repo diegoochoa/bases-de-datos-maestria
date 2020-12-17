@@ -1,139 +1,164 @@
 var mysql = require('mysql');
 
 async function getConexion(tabla) {
-    var resTabla = '', resCondicion = '', resConection;
+  let resConection = [];
+  var resTabla = '',
+    resCondicion = '';
 
-    var conexionCentral = mysql.createConnection({
-        host: 'localhost',
-        database: 'sitiocentral',
-        user: 'root',
-        password: ''
-    });
+  var conexionCentral = mysql.createPool({
+    host: 'localhost',
+    database: 'sitiocentral',
+    user: 'root',
+    password: ''
+  });
 
-    var conexionSitio1 = mysql.createConnection({
-        host: 'localhost',
-        database: 'sitio1',
-        user: 'root',
-        password: ''
-    });
+  var conexionSitio1 = mysql.createPool({
+    host: 'localhost',
+    database: 'sitio1',
+    user: 'root',
+    password: ''
+  });
 
-    var conexionSitio2 = mysql.createConnection({
-        host: 'localhost',
-        database: 'sitio2',
-        user: 'root',
-        password: ''
-    });
+  var conexionSitio2 = mysql.createPool({
+    host: 'localhost',
+    database: 'sitio2',
+    user: 'root',
+    password: ''
+  });
 
-    conexionCentral.connect(function (error) {
-        if (!error)
-            console.log("Conexión exitosa Central");
-        else
-            throw error;
-    });
+  conexionCentral.getConnection(function (error) {
+    if (!error) console.log('Conexión exitosa Central');
+    else throw error;
+  });
 
-    var dataLocalizacion = () => {
-        return new Promise((resolve, reject) => {
-            conexionCentral.query('SELECT * FROM localizacion WHERE tabla = ?', [tabla], (err, rows) => {
-                if (err)
-                    res.json(err);
+  con = {
+    central: conexionCentral
+  };
+  resConection.push(con);
+  var dataLocalizacion = () => {
+    return new Promise((resolve, reject) => {
+      conexionCentral.query('SELECT * FROM localizacion WHERE tabla = ?', [tabla], (err, rows) => {
+        if (err) res.json(err);
 
-                var row = rows[0];
+        var row = rows[0];
 
-                if (row.tipo !== null) {
-                    switch (row.tipo) {
-                        case "Vertical":
-                            resolve();
+        if (row.tipo !== null) {
+          switch (row.tipo) {
+            case 'Vertical':
+              for (let fragmento of rows) {
+                switch (fragmento.sitio) {
+                  case 1:
+                    conexionSitio1.getConnection(function (error) {
+                      if (!error) console.log('Conexión exitosa Sitio 1');
+                      else throw error;
+                    });
 
-                            break;
-                        case "Horizontal":
-                            for (let fragmento of rows) {
-                                switch (fragmento.sitio) {
-                                    case 1:
-                                        conexionSitio1.connect(function (error) {
-                                            if (!error)
-                                                console.log("Conexión exitosa Sitio 1");
-                                            else
-                                                throw error;
-                                        });
+                    con = {
+                      BD1: conexionSitio1,
+                      tabla: fragmento.nombre,
+                      sitio: fragmento.sitio
+                    };
+                    resConection.push(con);
 
-                                        resConection = {
-                                            BD: conexionSitio1,
-                                            tabla: fragmento.nombre,
-                                            condicion: resCondicion
-                                        }
+                    break;
+                  case 2:
+                    conexionSitio2.getConnection(function (error) {
+                      if (!error) console.log('Conexión exitosa Sitio 2');
+                      else throw error;
+                    });
+                    con = {
+                      BD2: conexionSitio2,
+                      tabla: fragmento.nombre,
+                      sitio: fragmento.sitio
+                    };
+                    resConection.push(con);
 
-                                        resolve();
-                                        break;
-                                    case 2:
-                                        conexionSitio2.connect(function (error) {
-                                            if (!error)
-                                                console.log("Conexión exitosa Sitio 2");
-                                            else
-                                                throw error;
-                                        });
-
-                                        resConection = {
-                                            BD: conexionSitio2,
-                                            tabla: fragmento.nombre,
-                                            condicion: resCondicion
-                                        }
-
-                                        resolve();
-                                        break;
-                                }
-                            }
-                            break;
-                        case "Replica":
-                            resolve();
-
-                            break;
-                    }
+                    break;
                 }
-                else {
-                    switch (row.sitio) {
-                        case 1:
-                            conexionSitio1.connect(function (error) {
-                                if (!error)
-                                    console.log("Conexión exitosa Sitio 1");
-                                else
-                                    throw error;
-                            });
+              }
+              resolve(resConection);
 
-                            resConection = {
-                                BD: conexionSitio1,
-                                tabla: row.nombre,
-                                condicion: resCondicion
-                            }
+              return resConection;
+            case 'Horizontal':
+              for (let fragmento of rows) {
+                switch (fragmento.sitio) {
+                  case 1:
+                    conexionSitio1.getConnection(function (error) {
+                      if (!error) console.log('Conexión exitosa Sitio 1');
+                      else throw error;
+                    });
 
-                            resolve();
-                            break;
-                        case 2:
-                            conexionSitio2.connect(function (error) {
-                                if (!error)
-                                    console.log("Conexión exitosa Sitio 2");
-                                else
-                                    throw error;
-                            });
+                    resConection = {
+                      BD: conexionSitio1,
+                      tabla: fragmento.nombre,
+                      condicion: resCondicion
+                    };
 
-                            resConection = {
-                                BD: conexionSitio2,
-                                tabla: row.nombre,
-                                condicion: resCondicion
-                            }
+                    resolve();
+                    break;
+                  case 2:
+                    conexionSitio2.getConnection(function (error) {
+                      if (!error) console.log('Conexión exitosa Sitio 2');
+                      else throw error;
+                    });
 
-                            resolve();
-                            break;
-                    }
+                    resConection = {
+                      BD: conexionSitio2,
+                      tabla: fragmento.nombre,
+                      condicion: resCondicion
+                    };
+
+                    resolve();
+                    break;
                 }
-            });
-        });
-    }
+              }
+              break;
+            case 'Replica':
+              resolve();
 
-    await dataLocalizacion();
+              break;
+          }
+        } else {
+          switch (row.sitio) {
+            case 1:
+              conexionSitio1.getConnection(function (error) {
+                if (!error) console.log('Conexión exitosa Sitio 1');
+                else throw error;
+              });
 
-    return resConection;
+              resConection = {
+                BD: conexionSitio1,
+                tabla: row.nombre,
+                condicion: resCondicion
+              };
+
+              resolve();
+              break;
+            case 2:
+              conexionSitio2.getConnection(function (error) {
+                if (!error) console.log('Conexión exitosa Sitio 2');
+                else throw error;
+              });
+
+              resConection = {
+                BD: conexionSitio2,
+                tabla: row.nombre,
+                condicion: resCondicion
+              };
+
+              resolve();
+              break;
+          }
+        }
+      });
+    });
+  };
+
+  await dataLocalizacion();
+
+  return resConection;
 }
 
 module.exports = {
-    getConexion
-}
+  getConexion
+};

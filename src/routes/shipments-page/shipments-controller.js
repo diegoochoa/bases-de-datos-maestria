@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const mysqlConnection = require('../../../connection');
-const sitio1 = mysqlConnection.conexionSitio1;
+const sqlconnection = mysqlConnection.getConexion('envio');
 
 app.set('view engine', 'ejs');
 
@@ -14,19 +14,42 @@ async function add(req, res) {
 async function save(req, res) {
   const data = req.body;
 
-  await sitio1.query('INSERT INTO envios SET ?', [data], (err, rows) => {
-    res.redirect('/shipments');
-  });
+  mysqlConnection
+    .getConexion('envio')
+    .then((sqlconnection) => {
+      const tabla = sqlconnection.tabla;
+      sqlconnection.BD.query(`INSERT INTO ${tabla} SET ?`, [data], (err, rows) => {
+        res.redirect('/shipments');
+      });
+    })
+    .catch((err) => {
+      res.status(500);
+      res.render('shipments', {
+        data: null
+      });
+    });
 }
 
 async function list(req, res) {
-  sitio1.query('SELECT * FROM envios', (err, rows) => {
-    if (err) res.json(err);
+  mysqlConnection
+    .getConexion('envio')
+    .then((sqlconnection) => {
+      const tabla = sqlconnection.tabla;
 
-    res.render('shipments', {
-      data: rows
+      sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+        if (err) res.json(err);
+
+        res.render('shipments', {
+          data: rows
+        });
+      });
+    })
+    .catch((err) => {
+      res.status(500);
+      res.render('shipments', {
+        data: []
+      });
     });
-  });
 }
 
 async function _delete(req, res) {
