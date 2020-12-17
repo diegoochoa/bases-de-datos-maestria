@@ -3,16 +3,16 @@
 <div class="container-fluid">
     <div class="row mb-3">
         <div class="col-6">
-            <h4>Clientes</h4>
+            <h4>Empleados</h4>
         </div>
         <div class="col-6 text-right">
-            <a class="btn btn-outline-success" href="/customers/add">
+            <a class="btn btn-outline-success" href="/employees/add">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"
                         d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                 </svg>
-                Agregar Cliente</a>
+                Agregar Empleado</a>
         </div>
     </div>
 
@@ -37,8 +37,11 @@
         <thead>
             <tr>
                 <th scope="col">Nombres</th>
-                <th scope="col">Apellido Paterno</th>
-                <th scope="col">Apellido Materno</th>
+                <th scope="col">Calle y Número</th>
+                <th scope="col">Colonia</th>
+                <th scope="col">CP</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Municipio</th>
                 <th scope="col">Teléfono</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
@@ -46,14 +49,17 @@
         </thead>
         <tbody>
             <% if(data) { %>
-                <% for(var customer of data) { %>
+                <% for(var employee of data) { %>
                     <tr>
-                        <td><%= customer.nombre %></td>
-                        <td><%= customer.apellido_paterno %></td>
-                        <td><%= customer.apellido_materno %></td>
-                        <td><%= customer.telefono %></td>
+                        <td><%= employee.nombres %> <%= employee.apellido_paterno %> <%= employee.apellido_materno %></td>
+                        <td><%= employee.calle %> <%= employee.numero_exterior %> <%= employee.numero_interior %></td>
+                        <td><%= employee.colonia %></td>
+                        <td><%= employee.codigo_postal %></td>
+                        <td><%= employee.estado %></td>
+                        <td><%= employee.municipio %></td>
+                        <td><%= employee.telefono %></td>
                         <td>
-                            <a href="/customers/edit/<%= customer.id %>" type="button" class="btn btn-primary btn-sm">
+                            <a href="/employees/edit/<%= employee.id %>" type="button" class="btn btn-primary btn-sm">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-fill" fill="currentColor"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
@@ -62,7 +68,7 @@
                             </a>
                         </td>
                         <td>
-                            <a href="/customers/delete/<%= customer.id %>" type="button" class="btn btn-danger btn-sm">
+                            <a href="/employees/delete/<%= employee.id %>" type="button" class="btn btn-danger btn-sm">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
