@@ -1,0 +1,83 @@
+<%- include("./partials/header") %>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-6">
+            <h4>Agregar Cliente</h4>
+        </div>
+    </div>
+</div>
+
+<div class="container bg-gray">
+    <div class="justify-content-center align-self-center">
+        <% if(!data) { %>
+        <form action="/customers/save" method="POST">
+            <div class="form-group">
+                <label>Nombres</label>
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre">
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Apellido Paterno</label>
+                        <input type="text" name="apellido_paterno" class="form-control" placeholder="Apellido Paterno">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Apellido Materno</label>
+                        <input type="text" name="apellido_materno" class="form-control" placeholder="Apellido Materno">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="number" name="telefono" class="form-control" placeholder="Teléfono">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 text-right">
+                <a href="/customers" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                <button class="btn btn-outline-success" type="submit">Crear Cliente</button>
+            </div>
+        </form>
+        <% } else { %>
+        <form action="/customers/update/<%= data.id %>" method="POST">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="nombre" value="<%= data.nombre %>" class="form-control" placeholder="Nombre">
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Apellido Paterno</label>
+                        <input type="text" name="apellido_paterno" value="<%= data.apellido_paterno %>" class="form-control" placeholder="Apellido Paterno">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Apellido Materno</label>
+                        <input type="text" name="apellido_materno" value="<%= data.apellido_materno %>" class="form-control" placeholder="Apellido Materno">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" name="telefono" value="<%= data.telefono %>" class="form-control" placeholder="Teléfono">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 text-right">
+                <a href="/customers" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                <button class="btn btn-outline-success" type="submit">Editar Cliente</button>
+            </div>
+        </form>
+        <% } %>
+    </div>
+</div>
+
+<%- include("./partials/footer") %>

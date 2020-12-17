@@ -8,6 +8,8 @@ const shipments_page_router = require('./shipments-page');
 const products_page_router = require('./products-page');
 const categories_page_router = require('./categories-page');
 const branch_offices_page_roter = require('./branch-offices-page');
+const customes_page_router = require('./customers-page');
+const employees_page_router = require('./employees-page');
 
 router.use('/home', home_page_router);
 
@@ -22,5 +24,9 @@ router.use('/products', products_page_router);
 router.use('/categories', categories_page_router);
 
 router.use('/branch-offices', branch_offices_page_roter);
+
+router.use('/customers', customes_page_router);
+
+router.use('/employees', employees_page_router);
 
 module.exports = router;
