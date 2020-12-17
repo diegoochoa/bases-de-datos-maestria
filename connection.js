@@ -5,28 +5,28 @@ async function getConexion(tabla, sitio) {
     resCondicion = '',
     auxResConection = [];
   let resConection = [];
-  var conexionCentral = mysql.createConnection({
+  var conexionCentral = mysql.createPool({
     host: 'localhost',
     database: 'sitiocentral',
     user: 'root',
     password: ''
   });
 
-  var conexionSitio1 = mysql.createConnection({
+  var conexionSitio1 = mysql.createPool({
     host: 'localhost',
     database: 'sitio1',
     user: 'root',
     password: ''
   });
 
-  var conexionSitio2 = mysql.createConnection({
+  var conexionSitio2 = mysql.createPool({
     host: 'localhost',
     database: 'sitio2',
     user: 'root',
     password: ''
   });
 
-  conexionCentral.connect(function (error) {
+  conexionCentral.getConnection(function (error) {
     if (!error) console.log('Conexión exitosa Central');
     else throw error;
   });
@@ -45,7 +45,7 @@ async function getConexion(tabla, sitio) {
         if (row.tipo === null) {
           switch (row.sitio) {
             case 1:
-              conexionSitio1.connect(function (error) {
+              conexionSitio1.getConnection(function (error) {
                 if (!error) console.log('Conexión exitosa Sitio 1');
                 else throw error;
               });
@@ -58,7 +58,7 @@ async function getConexion(tabla, sitio) {
               resolve();
               break;
             case 2:
-              conexionSitio2.connect(function (error) {
+              conexionSitio2.getConnection(function (error) {
                 if (!error) console.log('Conexión exitosa Sitio 2');
                 else throw error;
               });
@@ -113,7 +113,7 @@ async function getConexion(tabla, sitio) {
               if (sitio !== null) {
                 switch (sitio) {
                   case 1:
-                    conexionSitio1.connect(function (error) {
+                    conexionSitio1.getConnection(function (error) {
                       if (!error) console.log('Conexión exitosa Sitio 1');
                       else throw error;
                     });
@@ -126,7 +126,7 @@ async function getConexion(tabla, sitio) {
                     resolve();
                     break;
                   case 2:
-                    conexionSitio2.connect(function (error) {
+                    conexionSitio2.getConnection(function (error) {
                       if (!error) console.log('Conexión exitosa Sitio 2');
                       else throw error;
                     });
@@ -143,7 +143,7 @@ async function getConexion(tabla, sitio) {
                 for (let fragmento of rows) {
                   switch (fragmento.sitio) {
                     case 1:
-                      conexionSitio1.connect(function (error) {
+                      conexionSitio1.getConnection(function (error) {
                         if (!error) console.log('Conexión exitosa Sitio 1');
                         else throw error;
                       });
@@ -155,7 +155,7 @@ async function getConexion(tabla, sitio) {
 
                       break;
                     case 2:
-                      conexionSitio2.connect(function (error) {
+                      conexionSitio2.getConnection(function (error) {
                         if (!error) console.log('Conexión exitosa Sitio 2');
                         else throw error;
                       });
@@ -177,7 +177,7 @@ async function getConexion(tabla, sitio) {
               for (let fragmento of rows) {
                 switch (fragmento.sitio) {
                   case 1:
-                    conexionSitio1.connect(function (error) {
+                    conexionSitio1.getConnection(function (error) {
                       if (!error) console.log('Conexión exitosa Sitio 1');
                       else throw error;
                     });
@@ -191,7 +191,7 @@ async function getConexion(tabla, sitio) {
                     resolve();
                     break;
                   case 2:
-                    conexionSitio2.connect(function (error) {
+                    conexionSitio2.getConnection(function (error) {
                       if (!error) console.log('Conexión exitosa Sitio 2');
                       else throw error;
                     });
