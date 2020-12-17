@@ -1,3 +1,7 @@
 const server = require('./server');
 
-server.start();
+try {
+  server.start();
+} catch (err) {
+  console.log(err);
+}
