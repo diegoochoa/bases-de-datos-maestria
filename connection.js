@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 
-async function getConexion(tabla) {
-    var resTabla = '', resCondicion = '', resConection;
+async function getConexion(tabla, sitio) {
+    var resTabla = '', resCondicion = '', resConection, auxResConection = [];
 
     var conexionCentral = mysql.createConnection({
         host: 'localhost',
@@ -35,17 +35,124 @@ async function getConexion(tabla) {
         return new Promise((resolve, reject) => {
             conexionCentral.query('SELECT * FROM localizacion WHERE tabla = ?', [tabla], (err, rows) => {
                 if (err)
-                    res.json(err);
+                    console.log(err);
 
                 var row = rows[0];
 
-                if (row.tipo !== null) {
+                if (row.tipo === null) {
+                    switch (row.sitio) {
+                        case 1:
+                            conexionSitio1.connect(function (error) {
+                                if (!error)
+                                    console.log("Conexión exitosa Sitio 1");
+                                else
+                                    throw error;
+                            });
+
+                            resConection = {
+                                BD: conexionSitio1,
+                                tabla: row.nombre,
+                            }
+
+                            resolve();
+                            break;
+                        case 2:
+                            conexionSitio2.connect(function (error) {
+                                if (!error)
+                                    console.log("Conexión exitosa Sitio 2");
+                                else
+                                    throw error;
+                            });
+
+                            resConection = {
+                                BD: conexionSitio2,
+                                tabla: row.nombre,
+                            }
+
+                            resolve();
+                            break;
+                    }
+                }
+                else {
                     switch (row.tipo) {
                         case "Vertical":
                             resolve();
 
                             break;
                         case "Horizontal":
+                            if (sitio !== null) {
+                                switch (sitio) {
+                                    case 1:
+                                        conexionSitio1.connect(function (error) {
+                                            if (!error)
+                                                console.log("Conexión exitosa Sitio 1");
+                                            else
+                                                throw error;
+                                        });
+
+                                        resConection = {
+                                            BD: conexionSitio1,
+                                            tabla: rows.find(x => x.sitio === sitio).nombre
+                                        }
+
+                                        resolve();
+                                        break;
+                                    case 2:
+                                        conexionSitio2.connect(function (error) {
+                                            if (!error)
+                                                console.log("Conexión exitosa Sitio 2");
+                                            else
+                                                throw error;
+                                        });
+
+                                        resConection = {
+                                            BD: conexionSitio2,
+                                            tabla: rows.find(x => x.sitio === sitio).nombre
+                                        }
+
+                                        resolve();
+                                        break;
+                                }
+                            }
+                            else {
+                                for (let fragmento of rows) {
+                                    switch (fragmento.sitio) {
+                                        case 1:
+                                            conexionSitio1.connect(function (error) {
+                                                if (!error)
+                                                    console.log("Conexión exitosa Sitio 1");
+                                                else
+                                                    throw error;
+                                            });
+
+                                            auxResConection.push({
+                                                BD: conexionSitio1,
+                                                tabla: fragmento.nombre
+                                            });
+
+                                            break;
+                                        case 2:
+                                            conexionSitio2.connect(function (error) {
+                                                if (!error)
+                                                    console.log("Conexión exitosa Sitio 2");
+                                                else
+                                                    throw error;
+                                            });
+
+                                            auxResConection.push({
+                                                BD: conexionSitio2,
+                                                tabla: fragmento.nombre
+                                            });
+
+                                            break;
+                                    }
+                                }
+                                resConection = auxResConection;
+                                resolve();
+                            }
+
+                            break;
+                        case "Replica":
                             for (let fragmento of rows) {
                                 switch (fragmento.sitio) {
                                     case 1:
@@ -82,46 +189,7 @@ async function getConexion(tabla) {
                                         break;
                                 }
                             }
-                            break;
-                        case "Replica":
-                            resolve();
 
-                            break;
-                    }
-                }
-                else {
-                    switch (row.sitio) {
-                        case 1:
-                            conexionSitio1.connect(function (error) {
-                                if (!error)
-                                    console.log("Conexión exitosa Sitio 1");
-                                else
-                                    throw error;
-                            });
-
-                            resConection = {
-                                BD: conexionSitio1,
-                                tabla: row.nombre,
-                                condicion: resCondicion
-                            }
-
-                            resolve();
-                            break;
-                        case 2:
-                            conexionSitio2.connect(function (error) {
-                                if (!error)
-                                    console.log("Conexión exitosa Sitio 2");
-                                else
-                                    throw error;
-                            });
-
-                            resConection = {
-                                BD: conexionSitio2,
-                                tabla: row.nombre,
-                                condicion: resCondicion
-                            }
-
-                            resolve();
                             break;
                     }
                 }
