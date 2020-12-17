@@ -2,7 +2,7 @@ var mysql = require('mysql');
 
 async function getConexion(tabla, sitio) {
     var resTabla = '', resCondicion = '', resConection, auxResConection = [];
-
+    let resConection = [];
     var conexionCentral = mysql.createConnection({
         host: 'localhost',
         database: 'sitiocentral',
@@ -30,7 +30,11 @@ async function getConexion(tabla, sitio) {
         else
             throw error;
     });
-
+  
+    con = {
+    central: conexionCentral
+  };
+  resConection.push(con);
     var dataLocalizacion = () => {
         return new Promise((resolve, reject) => {
             conexionCentral.query('SELECT * FROM localizacion WHERE tabla = ?', [tabla], (err, rows) => {
@@ -75,10 +79,41 @@ async function getConexion(tabla, sitio) {
                 }
                 else {
                     switch (row.tipo) {
-                        case "Vertical":
-                            resolve();
+                            case 'Vertical':
+              for (let fragmento of rows) {
+                switch (fragmento.sitio) {
+                  case 1:
+                    conexionSitio1.getConnection(function (error) {
+                      if (!error) console.log('Conexión exitosa Sitio 1');
+                      else throw error;
+                    });
 
-                            break;
+                    con = {
+                      BD1: conexionSitio1,
+                      tabla: fragmento.nombre,
+                      sitio: fragmento.sitio
+                    };
+                    resConection.push(con);
+
+                    break;
+                  case 2:
+                    conexionSitio2.getConnection(function (error) {
+                      if (!error) console.log('Conexión exitosa Sitio 2');
+                      else throw error;
+                    });
+                    con = {
+                      BD2: conexionSitio2,
+                      tabla: fragmento.nombre,
+                      sitio: fragmento.sitio
+                    };
+                    resConection.push(con);
+
+                    break;
+                }
+              }
+              resolve(resConection);
+
+              return resConection;
                         case "Horizontal":
                             if (sitio !== null) {
                                 switch (sitio) {
@@ -193,15 +228,51 @@ async function getConexion(tabla, sitio) {
                             break;
                     }
                 }
-            });
-        });
-    }
+              }
+              break;
+            
+          }
+        } else {
+          switch (row.sitio) {
+            case 1:
+              conexionSitio1.getConnection(function (error) {
+                if (!error) console.log('Conexión exitosa Sitio 1');
+                else throw error;
+              });
 
-    await dataLocalizacion();
+              resConection = {
+                BD: conexionSitio1,
+                tabla: row.nombre,
+                condicion: resCondicion
+              };
 
-    return resConection;
+              resolve();
+              break;
+            case 2:
+              conexionSitio2.getConnection(function (error) {
+                if (!error) console.log('Conexión exitosa Sitio 2');
+                else throw error;
+              });
+
+              resConection = {
+                BD: conexionSitio2,
+                tabla: row.nombre,
+                condicion: resCondicion
+              };
+
+              resolve();
+              break;
+          }
+        }
+      });
+    });
+  };
+
+  await dataLocalizacion();
+
+  return resConection;
 }
 
 module.exports = {
-    getConexion
-}
+  getConexion
+};
