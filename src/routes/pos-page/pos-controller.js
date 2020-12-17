@@ -3,14 +3,19 @@ const app = express();
 const mysqlConnection = require('../../../connection');
 const sqlconnection = mysqlConnection.getConexion('venta');
 const products_controller = require('../products-page/products-controller');
+const customers_controller = require('../customers-page/customers-controller');
+const employees_controller = require('../employees-page/employees-controller');
 
 app.set('view engine', 'ejs');
 
 async function home(req, res) {
   const resultProducts = await products_controller.get();
-
+  const resultCustomers = await customers_controller.get();
+  const resultEmployees = await employees_controller.get();
   res.render('pos', {
-    productos: resultProducts
+    productos: resultProducts,
+    clientes: resultCustomers,
+    empleados: resultEmployees
   });
 }
 
@@ -29,9 +34,23 @@ async function save_sell(req, res) {
 
             let id_empleado = rows[1].atributo;
             let total_atr = rows[2].atributo;
+            let totalprecio;
             sqlconnection[i].BD1.query(`SELECT costo FROM producto1 WHERE id = ${data.producto}`, (err, rows) => {
               if (err) res.json(err);
-              let totalprecio = rows[0].costo;
+              try {
+                totalprecio = rows[0].costo;
+              } catch (err) {
+                console.log('Producto en sitio 2');
+                sqlconnection[2].BD2.query(`SELECT costo FROM producto2 WHERE id = ${data.producto}`, (err, rows) => {
+                  totalprecio = rows[0].costo;
+                  sqlconnection[i].BD1.query(
+                    `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${data.empleado},${totalprecio})`,
+                    (err, rows) => {
+                      if (err) res.json(err);
+                    }
+                  );
+                });
+              }
 
               sqlconnection[i].BD1.query(
                 `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${data.empleado},${totalprecio})`,
