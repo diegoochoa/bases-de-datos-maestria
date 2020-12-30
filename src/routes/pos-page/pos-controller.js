@@ -68,7 +68,7 @@ async function save_sell(req, res) {
             let fecha = rows[2].atributo;
             let date = new Date().toLocaleDateString();
             sqlconnection[i].BD2.query(
-              `INSERT INTO ${sqlconnection[i].tabla} (${id_cliente}, ${fecha}) VALUES (${data.numero_cliente},${date})`,
+              `INSERT INTO ${sqlconnection[i].tabla} (${id_cliente}) VALUES (${data.numero_cliente})`,
               (err, rows) => {
                 if (err) res.json(err);
                 res.redirect('/pos');
@@ -87,6 +87,7 @@ async function save_sell(req, res) {
     });
 }
 
+async function show_sells(req, res) {}
 module.exports = {
   home,
   save_sell
