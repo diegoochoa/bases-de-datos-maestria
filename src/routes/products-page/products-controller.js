@@ -158,6 +158,32 @@ async function update(req, res) {
       .catch((err) => {
         res.redirect('/products');
       });
+  else {
+    mysqlConnection
+      .getConexion('producto', parseInt(id_sucursal))
+      .then((sqlconnection) => {
+        const tabla = sqlconnection.tabla;
+
+        sqlconnection.BD.query(`DELETE FROM ${tabla} WHERE id = ?`, [id], (err, rows) => {
+          mysqlConnection
+            .getConexion('producto', parseInt(data.id_sucursal))
+            .then((sqlconnection) => {
+              const tabla = sqlconnection.tabla;
+
+              sqlconnection.BD.query(`INSERT INTO ${tabla} SET ?`, [data], (err, rows) => {
+                res.redirect('/products');
+              });
+            })
+
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+      })
+      .catch((err) => {
+        res.redirect('/products');
+      });
+  }
 }
 
 async function get(req, res) {
