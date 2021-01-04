@@ -1,0 +1,41 @@
+<%- include("./partials/header") %>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-6">
+            <h4>Agregar Compra</h4>
+        </div>
+    </div>
+</div>
+
+<div class="container bg-gray">
+    <div class="justify-content-center align-self-center">
+        <% if(!data) { %>
+        <form action="/purchases/save" method="POST">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre">
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="/purchases" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                <button class="btn btn-outline-success" type="submit">Crear Compra</button>
+            </div>
+        </form>
+        <% } else { %>
+        <form action="/purchases/update/<%= data.id %>" method="POST">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="nombre" value="<%= data.nombre %>" class="form-control" placeholder="Nombre">
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="/purchases" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                <button class="btn btn-outline-success" type="submit">Editar Compra</button>
+            </div>
+        </form>
+        <% } %>
+    </div>
+</div>
+
+<%- include("./partials/footer") %>
