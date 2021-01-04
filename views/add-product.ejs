@@ -81,7 +81,7 @@
             </div>
         </form>
         <% } else { %>
-        <form action="/products/update/<%= data.id %>" method="POST">
+        <form action="/products/update/<%= data.id %>/<%= data.id_sucursal %>" method="POST">
             <div class="form-group">
                 <label>Descripción</label>
                 <input type="text" name="descripcion" value="<%= data.descripcion %>" class="form-control"

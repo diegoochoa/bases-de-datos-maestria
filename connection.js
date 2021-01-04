@@ -35,7 +35,9 @@ async function getConexion(tabla, sitio) {
     con = {
         central: conexionCentral
     };
+
     resConection.push(con);
+
     var dataLocalizacion = () => {
         return new Promise((resolve, reject) => {
             conexionCentral.query('SELECT * FROM localizacion WHERE tabla = ?', [tabla], (err, rows) => {
@@ -110,7 +112,6 @@ async function getConexion(tabla, sitio) {
                             resolve(resConection);
 
                             return resConection;
-
                         case 'Horizontal':
                             if (sitio !== null) {
                                 switch (sitio) {
@@ -141,7 +142,8 @@ async function getConexion(tabla, sitio) {
                                         resolve();
                                         break;
                                 }
-                            } else {
+                            }
+                            else {
                                 for (let fragmento of rows) {
                                     switch (fragmento.sitio) {
                                         case 1:
@@ -215,6 +217,7 @@ async function getConexion(tabla, sitio) {
             });
         });
     };
+
     await dataLocalizacion();
 
     return resConection;
