@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
 const mysqlConnection = require('../../../connection');
+const productsController = require('../products-page/products-controller');
 
 app.set('view engine', 'ejs');
 
 async function list(req, res) {
-  console.log("here");
   mysqlConnection.getConexion("compra")
     .then(sqlconnection => {
       const tabla = sqlconnection.tabla;
@@ -51,8 +51,11 @@ async function get() {
 }
 
 async function add(req, res) {
+  const resultProducts = await productsController.get("ACTIVO");
+
   res.render('add-purchase', {
-    data: null
+    data: null,
+    productos: resultProducts,
   });
 }
 

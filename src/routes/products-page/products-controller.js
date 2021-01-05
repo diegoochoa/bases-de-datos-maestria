@@ -186,7 +186,7 @@ async function update(req, res) {
   }
 }
 
-async function get(req, res) {
+async function get(status) {
   var productos = (query) => {
     return new Promise((resolve, reject) => {
       mysqlConnection
@@ -200,8 +200,13 @@ async function get(req, res) {
 
               var productosSitio = (query) => {
                 return new Promise((resolve, reject) => {
-                  conection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
-                    if (err) res.json(err);
+                  let query = `SELECT * FROM ${tabla}`;
+
+                  if (status != null)
+                    query += ` WHERE status="${status}"`;
+
+                  conection.BD.query(query, (err, rows) => {
+                    if (err) throw err;
 
                     return resolve(rows);
                   });
@@ -214,8 +219,13 @@ async function get(req, res) {
             return resolve(resultSitios);
           } else {
             const tabla = sqlconnection.tabla;
-            sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
-              if (err) res.json(err);
+            let query = `SELECT * FROM ${tabla}`;
+
+            if (status != null)
+              query += ` WHERE status="${status}"`;
+
+            sqlconnection.BD.query(`query`, (err, rows) => {
+              if (err) throw err;
 
               return resolve(rows);
             });
@@ -228,8 +238,6 @@ async function get(req, res) {
   };
 
   var resultProductos = await productos();
-  var resultCategorias = await categoriesController.get();
-  var resultSucursales = await branchOfficesController.get();
 
   return resultProductos;
 }

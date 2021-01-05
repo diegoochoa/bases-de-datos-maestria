@@ -36,6 +36,10 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
+                    <th scope="col">Folio</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Productos</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -44,8 +48,10 @@
                 <% if(data) { %>
                     <% for(var purchase of data) { %>
                         <tr>
-                            <!-- <th scope="row"><%= purchase.descripcion %></th>
-                <td><%= product.marca %></td> -->
+                            <th scope="row"><%= purchase.id %> </th>
+                            <th><%= purchase.fecha %></th>
+                            <td><%= product.total %></td>
+                            <td><%= product.productos %></td>
                             <td>
                                 <a href="/purchases/edit/<%= purchase.id %>" type="button"
                                     class="btn btn-primary btn-sm">
