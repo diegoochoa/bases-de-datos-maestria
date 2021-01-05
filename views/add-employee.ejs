@@ -105,6 +105,7 @@
                     <div class="form-group">
                         <label>Sucursal</label>
                         <select name="sucursal" class="form-control" placeholder="Sucursal">
+                            <option value="0" default>Todas </option>
                             <% if(sucursales) { %>
                             <% for(var sucursal of sucursales) { %>
                             <option value="<%= sucursal.id %>"><%= sucursal.nombre %></option>
