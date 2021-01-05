@@ -13,7 +13,8 @@ router.post(
   '/',
   check_format,
   passport.authenticate('local', { succesRedirect: '/', failureRedirect: '/login' }),
-  login_page_controller.validate_login
+  login_page_controller.validate_login,
+  login_page_controller.validateCookies
 );
 
 module.exports = router;

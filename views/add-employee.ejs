@@ -86,6 +86,34 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Correo/Usuario</label>
+                        <input type="text" name="correo"  class="form-control"
+                            placeholder="Usuario">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="text" name="contrasena" class="form-control"
+                            placeholder="Contraseña">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Sucursal</label>
+                        <select name="sucursal" class="form-control" placeholder="Sucursal">
+                            <% if(sucursales) { %>
+                            <% for(var sucursal of sucursales) { %>
+                            <option value="<%= sucursal.id %>"><%= sucursal.nombre %></option>
+                            <% } %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
             <div class="mt-4 text-right">
                 <a href="/employees" class="btn btn-outline-secondary">Cancelar</a>
@@ -173,6 +201,34 @@
                         <label>Municipio</label>
                         <input type="text" name="municipio" value="<%= data.municipio %>" class="form-control"
                             placeholder="Municipio">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Correo/Usuario</label>
+                        <input type="text" name="correo" value="<%= data.correo %>" class="form-control"
+                            placeholder="Estado">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="text" name="contrasena" value="<%= data.contrasena %>" class="form-control"
+                            placeholder="Municipio">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Sucursal</label>
+                        <select name="sucursal" class="form-control" placeholder="Sucursal">
+                            <% if(sucursales) { %>
+                            <% for(var sucursal of sucursales) { %>
+                            <option value="<%= sucursal.id %>"><%= sucursal.nombre %></option>
+                            <% } %>
+                            <% } %>
+                        </select>
                     </div>
                 </div>
             </div>
