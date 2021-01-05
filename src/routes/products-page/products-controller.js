@@ -200,6 +200,7 @@ async function get(status) {
 
               var productosSitio = (query) => {
                 return new Promise((resolve, reject) => {
+
                   let query = `SELECT * FROM ${tabla}`;
 
                   if (status != null)
@@ -208,6 +209,7 @@ async function get(status) {
                   conection.BD.query(query, (err, rows) => {
                     if (err) throw err;
 
+      
                     return resolve(rows);
                   });
                 });

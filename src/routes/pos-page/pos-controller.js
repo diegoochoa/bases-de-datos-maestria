@@ -21,6 +21,7 @@ async function home(req, res) {
 
 async function save_sell(req, res) {
   const data = req.body;
+  var totalprecio;
   console.log(data);
   const resultProducts = await products_controller.get();
 
@@ -34,17 +35,19 @@ async function save_sell(req, res) {
 
             let id_empleado = rows[1].atributo;
             let total_atr = rows[2].atributo;
-            let totalprecio;
+
             sqlconnection[i].BD1.query(`SELECT costo FROM producto1 WHERE id = ${data.producto}`, (err, rows) => {
-              if (err) res.json(err);
+              if (err) console.log(err);
               try {
                 totalprecio = rows[0].costo;
               } catch (err) {
                 console.log('Producto en sitio 2');
                 sqlconnection[2].BD2.query(`SELECT costo FROM producto2 WHERE id = ${data.producto}`, (err, rows) => {
                   totalprecio = rows[0].costo;
+                  console.log(totalprecio);
+
                   sqlconnection[i].BD1.query(
-                    `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${data.empleado},${totalprecio})`,
+                    `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${data.empleado},${rows[0].costo})`,
                     (err, rows) => {
                       if (err) res.json(err);
                     }
@@ -68,7 +71,7 @@ async function save_sell(req, res) {
             let fecha = rows[2].atributo;
             let date = new Date().toLocaleDateString();
             sqlconnection[i].BD2.query(
-              `INSERT INTO ${sqlconnection[i].tabla} (${id_cliente}, ${fecha}) VALUES (${data.numero_cliente},${date})`,
+              `INSERT INTO ${sqlconnection[i].tabla} (${id_cliente}) VALUES (${data.numero_cliente})`,
               (err, rows) => {
                 if (err) res.json(err);
                 res.redirect('/pos');
@@ -86,6 +89,7 @@ async function save_sell(req, res) {
       });
     });
 }
+
 
 async function list(req, res) {
   var ventas = (query) => {
@@ -111,6 +115,7 @@ async function list(req, res) {
     clientes: resultCustomers
   });
 }
+
 
 module.exports = {
   home,
