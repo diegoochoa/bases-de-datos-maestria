@@ -1,0 +1,308 @@
+<%- include("./partials/header") %>
+
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-6">
+                <h4>Balance</h4>
+            </div>
+            <div class="col-6 text-right">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mdFiltrar">
+                    Filtrar
+                </button>
+            </div>
+        </div>
+
+        <table class="table table-striped table-hover table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Concepto</th>
+                    <th scope="col">Ene</th>
+                    <th scope="col">Feb</th>
+                    <th scope="col">Mar</th>
+                    <th scope="col">Abr</th>
+                    <th scope="col">May</th>
+                    <th scope="col">Jun</th>
+                    <th scope="col">Jul</th>
+                    <th scope="col">Ago</th>
+                    <th scope="col">Sep</th>
+                    <th scope="col">Oct</th>
+                    <th scope="col">Nov</th>
+                    <th scope="col">Dic</th>
+                    <th scope="col">Total</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="row" class="table-primary">Costo</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-primary">Presupuesto</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-primary">Venta</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-danger">Promociones</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-danger">Materiales</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-danger">Transporte</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-success">Venta Total</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-success">Ganancia</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <thead>
+                    <td colspan="14"></td>
+                </thead>
+                <tr>
+                    <td scope="row" class="table-warning">%Ganacia</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-warning">% Venta VS Pres</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <thead>
+                    <td colspan="14"></td>
+                </thead>
+                <tr>
+                    <td scope="row" class="table-success">Inversión</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-danger">Pagos</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-danger">Compra</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="row" class="table-primary">Capital</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="mdFiltrar" tabindex="-1" role="dialog" aria-labelledby="mdFiltrar"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Filtro</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Sucursal</label>
+                        <select name="id_sucursal" class="form-control"
+                            placeholder="Sucursal">
+                            <option value="">Todas</option>
+                            <% if(sucursales) { %>
+                            <% for(var sucursal of sucursales) { %>
+                            <option value="<%= sucursal.id %>"><%= sucursal.nombre %></option>
+                            <% } %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Filtrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include("./partials/footer") %>
