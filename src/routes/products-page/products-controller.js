@@ -193,7 +193,7 @@ async function get(req, res) {
               var productosSitio = (query) => {
                 return new Promise((resolve, reject) => {
                   conection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
-                    if (err) res.json(err);
+                    if (err) console.log(err);
 
                     return resolve(rows);
                   });
