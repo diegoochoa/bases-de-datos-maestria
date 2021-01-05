@@ -10,4 +10,7 @@ router.get('/', check_format, pos_page_controller.home);
 
 router.post('/save_sell', check_format, pos_page_controller.save_sell);
 
+router.get('/sales', check_format, pos_page_controller.list);
+
+
 module.exports = router;
