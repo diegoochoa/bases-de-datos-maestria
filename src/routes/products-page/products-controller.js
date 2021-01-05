@@ -32,7 +32,8 @@ async function list(req, res) {
               resultSitios = resultSitios.concat(resultProductosSitio);
             }
             return resolve(resultSitios);
-          } else {
+          }
+          else {
             const tabla = sqlconnection.tabla;
             sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
               if (err) res.json(err);
@@ -75,7 +76,6 @@ async function save(req, res) {
   mysqlConnection
     .getConexion('producto', parseInt(data.id_sucursal))
     .then((sqlconnection) => {
-      console.log(sqlconnection);
       const tabla = sqlconnection.tabla;
 
       sqlconnection.BD.query(`INSERT INTO ${tabla} SET ?`, [data], (err, rows) => {
@@ -90,9 +90,10 @@ async function save(req, res) {
 
 async function _delete(req, res) {
   const id = req.params.id;
+  const id_sucursal = req.params.id_sucursal;
 
   mysqlConnection
-    .getConexion('producto')
+    .getConexion('producto', parseInt(id_sucursal))
     .then((sqlconnection) => {
       const tabla = sqlconnection.tabla;
 
@@ -107,41 +108,20 @@ async function _delete(req, res) {
 
 async function edit(req, res) {
   const id = req.params.id;
+  const id_sucursal = req.params.id_sucursal;
 
   var producto = (query) => {
     return new Promise((resolve, reject) => {
       mysqlConnection
-        .getConexion('producto')
+        .getConexion('producto', parseInt(id_sucursal))
         .then(async (sqlconnection) => {
-          console.log(sqlconnection);
+          const tabla = sqlconnection.tabla;
 
-          if (Array.isArray(sqlconnection)) {
-            for (let conection of sqlconnection) {
-              const tabla = conection.tabla;
-              console.log(tabla);
+          sqlconnection.BD.query(`SELECT * FROM  ${tabla} WHERE id = ?`, [id], (err, rows) => {
+            if (err) res.json(err);
 
-              var productosSitio = (query) => {
-                return new Promise((resolve, reject) => {
-                  conection.BD.query(`SELECT * FROM  ${tabla} WHERE id = ?`, [id], (err, rows) => {
-                    if (err) res.json(err);
-
-                    return resolve(rows);
-                  });
-                });
-              };
-
-              var resultProductosSitio = await productosSitio();
-              if (resultProductosSitio.length > 0) return resolve(resultProductosSitio[0]);
-            }
-          } else {
-            const tabla = sqlconnection.tabla;
-
-            sqlconnection.BD.query(`SELECT * FROM  ${tabla} WHERE id = ?`, [id], (err, rows) => {
-              if (err) res.json(err);
-
-              return resolve(rows[0]);
-            });
-          }
+            return resolve(rows[0]);
+          });
         })
         .catch((err) => {
           return resolve(null);
@@ -162,23 +142,51 @@ async function edit(req, res) {
 
 async function update(req, res) {
   const id = req.params.id;
+  const id_sucursal = req.params.id_sucursal;
   const data = req.body;
 
-  mysqlConnection
-    .getConexion('producto', parseInt(data.id_sucursal))
-    .then((sqlconnection) => {
-      const tabla = sqlconnection.tabla;
+  if (parseInt(id_sucursal) == parseInt(data.id_sucursal))
+    mysqlConnection
+      .getConexion('producto', parseInt(data.id_sucursal))
+      .then((sqlconnection) => {
+        const tabla = sqlconnection.tabla;
 
-      sqlconnection.BD.query(`UPDATE ${tabla} SET ? WHERE id = ?`, [data, id], (err, rows) => {
+        sqlconnection.BD.query(`UPDATE ${tabla} SET ? WHERE id = ?`, [data, id], (err, rows) => {
+          res.redirect('/products');
+        });
+      })
+      .catch((err) => {
         res.redirect('/products');
       });
-    })
-    .catch((err) => {
-      res.redirect('/products');
-    });
+  else {
+    mysqlConnection
+      .getConexion('producto', parseInt(id_sucursal))
+      .then((sqlconnection) => {
+        const tabla = sqlconnection.tabla;
+
+        sqlconnection.BD.query(`DELETE FROM ${tabla} WHERE id = ?`, [id], (err, rows) => {
+          mysqlConnection
+            .getConexion('producto', parseInt(data.id_sucursal))
+            .then((sqlconnection) => {
+              const tabla = sqlconnection.tabla;
+
+              sqlconnection.BD.query(`INSERT INTO ${tabla} SET ?`, [data], (err, rows) => {
+                res.redirect('/products');
+              });
+            })
+
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+      })
+      .catch((err) => {
+        res.redirect('/products');
+      });
+  }
 }
 
-async function get(req, res) {
+async function get(status) {
   var productos = (query) => {
     return new Promise((resolve, reject) => {
       mysqlConnection
@@ -192,9 +200,16 @@ async function get(req, res) {
 
               var productosSitio = (query) => {
                 return new Promise((resolve, reject) => {
-                  conection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
-                    if (err) console.log(err);
 
+                  let query = `SELECT * FROM ${tabla}`;
+
+                  if (status != null)
+                    query += ` WHERE status="${status}"`;
+
+                  conection.BD.query(query, (err, rows) => {
+                    if (err) throw err;
+
+      
                     return resolve(rows);
                   });
                 });
@@ -206,8 +221,13 @@ async function get(req, res) {
             return resolve(resultSitios);
           } else {
             const tabla = sqlconnection.tabla;
-            sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
-              if (err) res.json(err);
+            let query = `SELECT * FROM ${tabla}`;
+
+            if (status != null)
+              query += ` WHERE status="${status}"`;
+
+            sqlconnection.BD.query(`query`, (err, rows) => {
+              if (err) throw err;
 
               return resolve(rows);
             });
@@ -220,8 +240,6 @@ async function get(req, res) {
   };
 
   var resultProductos = await productos();
-  var resultCategorias = await categoriesController.get();
-  var resultSucursales = await branchOfficesController.get();
 
   return resultProductos;
 }

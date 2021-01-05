@@ -12,11 +12,11 @@ router.get('/add', check_format, product_controller.add);
 
 router.post('/save', check_format, product_controller.save);
 
-router.get('/delete/:id', check_format, product_controller._delete);
+router.get('/delete/:id/:id_sucursal', check_format, product_controller._delete);
 
-router.get('/edit/:id', check_format, product_controller.edit);
+router.get('/edit/:id/:id_sucursal', check_format, product_controller.edit);
 
-router.post('/update/:id', check_format, product_controller.update);
+router.post('/update/:id/:id_sucursal', check_format, product_controller.update);
 
 
 module.exports = router;

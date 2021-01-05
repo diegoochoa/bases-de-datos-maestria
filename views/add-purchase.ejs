@@ -1,0 +1,118 @@
+<%- include("./partials/header") %>
+
+    <script>
+        $(document).ready(function () {
+            var productosCompra = [];
+            var productosActivos = [];
+
+            $("#selectProducto option").forEach(element => {
+                productosActivos.push({
+
+                })
+            });
+
+            $("#agregaProducto").click(function () {
+
+                
+            });
+        });
+    </script>
+
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-6">
+                <h4>Agregar Compra</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="container bg-gray">
+        <div class="justify-content-center align-self-center">
+            <% if(!data) { %>
+                <form action="/purchases/save" method="POST">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label>Producto</label>
+                                <select id="selectProducto" name="producto" class="form-control" placeholder="Producto...">
+                                    <% if(productos) { %>
+                                        <% for(var producto of productos) { %>
+                                            <% if(productos) { %>
+                                                <option value="<%= producto.id %>">
+                                                    <%= producto.descripcion %>
+                                                </option>
+                                                <% } %>
+                                                    <% } %>
+                                                        <% } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <br />
+                            <button id="agregaProducto" type="button" class="btn btn-outline-success">Agregar
+                                Producto</button>
+                        </div>
+                        <div class="col-2">
+                            <br />
+                            <a class="btn btn-outline-success" href="/products/add">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                </svg>
+                                Crear Producto</a>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Categoría</th>
+                                <th scope="col">Costo</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Talla</th>
+                                <th scope="col">Marca</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Fecha</label>
+                                <input type="date" name="fecha" class="form-control" placeholder="Fecha">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Total</label>
+                                <input type="number" name="total" class="form-control" placeholder="Total">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-right">
+                        <a href="/purchases" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                        <button class="btn btn-outline-success" type="submit">Crear Compra</button>
+                    </div>
+                </form>
+                <% } else { %>
+                    <form action="/purchases/update/<%= data.id %>" method="POST">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" name="nombre" value="<%= data.nombre %>" class="form-control"
+                                placeholder="Nombre">
+                        </div>
+
+                        <div class="mt-4 text-right">
+                            <a href="/purchases" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                            <button class="btn btn-outline-success" type="submit">Editar Compra</button>
+                        </div>
+                    </form>
+                    <% } %>
+        </div>
+    </div>
+
+    <%- include("./partials/footer") %>

@@ -90,8 +90,35 @@ async function save_sell(req, res) {
     });
 }
 
-async function show_sells(req, res) {}
+
+async function list(req, res) {
+  var ventas = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('venta', null)
+        .then(async (sqlconnection) => {
+          return resolve([]);
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
+
+  const resultVentas = await ventas();
+  const resultCustomers = await customers_controller.get();
+  const resultEmployees = await employees_controller.get();
+
+  res.render('sales', {
+    data: resultVentas,
+    empleados: resultEmployees,
+    clientes: resultCustomers
+  });
+}
+
+
 module.exports = {
   home,
-  save_sell
+  save_sell,
+  list
 };
