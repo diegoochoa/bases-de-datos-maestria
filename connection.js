@@ -184,12 +184,12 @@ async function getConexion(tabla, sitio) {
                       else throw error;
                     });
 
-                    resConection = {
+                    con = {
                       BD: conexionSitio1,
                       tabla: fragmento.nombre,
                       condicion: resCondicion
                     };
-
+                    resConection.push(con);
                     resolve();
                     break;
                   case 2:
@@ -198,12 +198,12 @@ async function getConexion(tabla, sitio) {
                       else throw error;
                     });
 
-                    resConection = {
+                    con = {
                       BD: conexionSitio2,
                       tabla: fragmento.nombre,
                       condicion: resCondicion
                     };
-
+                    resConection.push(con);
                     resolve();
                     break;
                 }
