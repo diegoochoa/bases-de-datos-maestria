@@ -16,14 +16,13 @@ const balance_page_router = require('./balance-page');
 
 const is_auth = require('../middlewares/is_auth');
 
-
 router.use('/home', is_auth, home_page_router);
 
 router.use('/login', login_page_router);
 
 router.use('/pos', is_auth, pos_page_router);
 
-router.use('/shipments', is_auth, shipments_page_router);
+router.use('/shipments', shipments_page_router);
 
 router.use('/products', is_auth, products_page_router);
 

@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const mysqlConnection = require('../../../connection');
-const sqlconnection = mysqlConnection.getConexion('envio');
 
 app.set('view engine', 'ejs');
 
@@ -17,12 +16,16 @@ async function save(req, res) {
   mysqlConnection
     .getConexion('envio')
     .then((sqlconnection) => {
+      console.log('agregando envio');
       const tabla = sqlconnection.tabla;
+      console.log(tabla);
+      console.log(data);
       sqlconnection.BD.query(`INSERT INTO ${tabla} SET ?`, [data], (err, rows) => {
         res.redirect('/shipments');
       });
     })
     .catch((err) => {
+      console.log(err);
       res.status(500);
       res.render('shipments', {
         data: null
@@ -55,29 +58,48 @@ async function list(req, res) {
 async function _delete(req, res) {
   const id = req.params.numero_guia;
 
-  sitio1.query('DELETE FROM envios WHERE numero_guia = ?', [id], (err, rows) => {
-    res.redirect('/shipments');
-  });
+  mysqlConnection
+    .getConexion('envio')
+    .then((sqlconnection) => {
+      const tabla = sqlconnection.tabla;
+      sqlconnection.BD.query(`DELETE FROM ${tabla} WHERE numero_guia = ?`, [id], (err, rows) => {
+        res.redirect('/shipments');
+      });
+    })
+    .catch((err) => {
+      res.status(500);
+      res.redirect('/shipments');
+    });
 }
 
 async function edit(req, res) {
   const id = req.params.numero_guia;
-  sitio1.query('SELECT * FROM envios WHERE numero_guia = ?', [id], (err, rows) => {
-    if (!err) {
+  mysqlConnection.getConexion('envio').then((sqlconnection) => {
+    const tabla = sqlconnection.tabla;
+    sqlconnection.BD.query(`SELECT * FROM ${tabla} WHERE numero_guia = ?`, [id], (err, rows) => {
       res.render('add-shipment', {
         data: rows[0]
       });
-    }
+    });
   });
 }
 
 async function update(req, res) {
-  const id = req.params.numero_guia;
+  const id = req.body.numero_guia;
   const data = req.body;
 
-  sitio1.query('UPDATE envios SET ? WHERE numero_guia = ?', [data, id], (err, rows) => {
-    res.redirect('/shipments');
-  });
+  console.log(id, data);
+  mysqlConnection
+    .getConexion('envio')
+    .then((sqlconnection) => {
+      const tabla = sqlconnection.tabla;
+      sqlconnection.BD.query(`UPDATE ${tabla} SET ? WHERE numero_guia = ?`, [data, id], (err, rows) => {
+        res.redirect('/shipments');
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 module.exports = {
