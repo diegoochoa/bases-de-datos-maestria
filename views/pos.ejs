@@ -1,4 +1,18 @@
 <%- include("./partials/header") %>
+
+<script>
+    $(document).ready(function () {
+    
+      if (alert === true) {
+        var alert = 'Alerta'
+        var alertTitle = 'Venta creada'
+        var alertMessage = 'Su venta fue registrada con exito'
+        swal(alertTitle, alertMessage, "success");
+      }
+    
+    })
+    
+    </script>
         <div class="text-center w-100 bg-light ">
             <div class="container text-center mx-auto">
                 <h1>Punto de venta - Bazar de ropa</h1>
@@ -74,18 +88,10 @@
                                 <button class="btn btn-outline-success" type="submit">Registrar venta</button>  
                             </div>
 
-                    </form>
-                    
-
-                   
-                </div>
-             
-
-                
-               
+                    </form>                                      
+                </div>         -
             </div>
         </div>
-
 
     </body>
 </html>
