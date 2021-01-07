@@ -18,5 +18,6 @@ router.get('/edit/:id/:id_sucursal', check_format, product_controller.edit);
 
 router.post('/update/:id/:id_sucursal', check_format, product_controller.update);
 
+router.get('/inventory', check_format, product_controller.list_inventory);
 
 module.exports = router;

@@ -6,6 +6,10 @@ const branchOfficesController = require('../branch-offices-page/branch-offices-c
 app.set('view engine', 'ejs');
 
 async function list(req, res) {
+  const { cookies } = req;
+  console.log(cookies);
+  const user = cookies.usuario_activo;
+
   mysqlConnection
     .getConexion('empleado')
     .then((sqlconnection) => {
@@ -36,6 +40,29 @@ async function get() {
           const tabla = sqlconnection.tabla;
 
           sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+            if (err) res.json(err);
+
+            return resolve(rows);
+          });
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
+
+  return await empleados();
+}
+
+async function get_emplopyees_pos(sitio) {
+  var empleados = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('empleado')
+        .then((sqlconnection) => {
+          const tabla = sqlconnection.tabla;
+
+          sqlconnection.BD.query(`SELECT * FROM ${tabla} WHERE sucursal=${sitio}`, (err, rows) => {
             if (err) res.json(err);
 
             return resolve(rows);
@@ -145,5 +172,6 @@ module.exports = {
   save,
   _delete,
   edit,
-  update
+  update,
+  get_emplopyees_pos
 };
