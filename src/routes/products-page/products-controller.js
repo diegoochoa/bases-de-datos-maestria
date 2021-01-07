@@ -72,7 +72,7 @@ async function list_inventory(req, res) {
 
               var productosSitio = (query) => {
                 return new Promise((resolve, reject) => {
-                  conection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+                  conection.BD.query(`SELECT * FROM ${tabla} WHERE NOT status="NO DISPONIBLE"`, (err, rows) => {
                     if (err) res.json(err);
 
                     return resolve(rows);
@@ -104,6 +104,58 @@ async function list_inventory(req, res) {
   var resultSucursales = await branchOfficesController.get();
 
   res.render('inventory', {
+    data: resultProductos,
+    categorias: resultCategorias,
+    sucursales: resultSucursales
+  });
+}
+
+async function print(req, res) {
+  var productos = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('producto', null)
+        .then(async (sqlconnection) => {
+          if (Array.isArray(sqlconnection)) {
+            var resultSitios = [];
+
+            for (let conection of sqlconnection) {
+              const tabla = conection.tabla;
+
+              var productosSitio = (query) => {
+                return new Promise((resolve, reject) => {
+                  conection.BD.query(`SELECT * FROM ${tabla} WHERE NOT status="NO DISPONIBLE"`, (err, rows) => {
+                    if (err) res.json(err);
+
+                    return resolve(rows);
+                  });
+                });
+              };
+
+              var resultProductosSitio = await productosSitio();
+              resultSitios = resultSitios.concat(resultProductosSitio);
+            }
+            return resolve(resultSitios);
+          } else {
+            const tabla = sqlconnection.tabla;
+            sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+              if (err) res.json(err);
+
+              return resolve(rows);
+            });
+          }
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
+
+  var resultProductos = await productos();
+  var resultCategorias = await categoriesController.get();
+  var resultSucursales = await branchOfficesController.get();
+
+  res.render('inventory-print', {
     data: resultProductos,
     categorias: resultCategorias,
     sucursales: resultSucursales
@@ -429,5 +481,6 @@ module.exports = {
   get,
   getById,
   get_products_sitio,
-  list_inventory
+  list_inventory,
+  print
 };

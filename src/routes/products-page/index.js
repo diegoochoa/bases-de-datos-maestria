@@ -20,4 +20,6 @@ router.post('/update/:id/:id_sucursal', check_format, product_controller.update)
 
 router.get('/inventory', check_format, product_controller.list_inventory);
 
+router.get('/inventory/print', check_format, product_controller.print);
+
 module.exports = router;

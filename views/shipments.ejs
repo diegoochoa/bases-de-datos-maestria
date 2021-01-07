@@ -55,7 +55,7 @@
                     <tr>
                         <td><%= envio.numero_guia %></td>
                         <td><%= envio.id_venta %></td>
-                        <td><%= envio.fecha %></td>
+                        <td><%= (new Date(envio.fecha)).getDate() %>/<%= (new Date(envio.fecha)).getMonth() +1 %>/<%= (new Date(envio.fecha)).getFullYear() %></td>
                         <td><%= envio.calle %></td>
                         <td><%= envio.numero_exterior %></td>
                         <td><%= envio.numero_interior %></td>

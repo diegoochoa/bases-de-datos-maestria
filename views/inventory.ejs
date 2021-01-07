@@ -1,5 +1,16 @@
 <%- include("./partials/header") %>
 
+<script>
+    $(document).ready(function () {
+        var productosCompra = [];
+
+        $("#imprimir").click(function () {
+            window.open(`http://127.0.0.1:3000/products/inventory/print`, "Reporte Ventas", "width=800,height=600");
+            // window.open(`/prospectos/mx/reporte/print?fecha_inicio=${this.state.filtro.fecha_inicio}&fecha_fin=${this.state.filtro.fecha_fin}&destinatarios=${this.state.destinatarios}`, "Reporte Prospectos MX", "width=800,height=600");
+        });
+    });
+</script>
+
 <div class="container-fluid">
     <div class="row mb-3">
         <div class="col-10">
@@ -14,13 +25,9 @@
                 </svg>
                 Agregar Venta</a>
         </div> -->
+        
         <div class="col-1 text-right">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mdFiltrar">
-                Filtrar
-            </button>
-        </div>
-        <div class="col-1 text-right">
-            <button type="button" class="btn btn-success">
+            <button type="button" class="btn btn-success" id="imprimir">
                 Imprimir
             </button>
         </div>

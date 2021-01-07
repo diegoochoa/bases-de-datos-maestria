@@ -74,6 +74,7 @@ async function _delete(req, res) {
 
         sqlconnection[i].BD.query(`DELETE FROM ${tabla} WHERE numero_guia = ?`, [id], (err, rows) => {
           if (err) console.log(err);
+          pos_controller.setStatus(id, 1);
         });
       }
 

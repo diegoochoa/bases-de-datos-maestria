@@ -8,4 +8,6 @@ router.use('/', bodyParser.raw({ type: 'application/octet-stream', limit: '10MB'
 
 router.get('/', check_format, balance_controller.get);
 
+router.get('/print', check_format, balance_controller.print);
+
 module.exports = router;

@@ -34,12 +34,7 @@
             </div>
             <div class="col-3">
                 <div className="card-group">
-                    <div className="card">
-                        <div className="card-body">
-                            De:  <br />
-                            A: 
-                        </div>
-                    </div>
+                
                     <div className="card">
                         <div className="card-body">
                             Fecha de impresión: <br />
@@ -71,12 +66,12 @@
                             </td>
                             <td>
                                 <% if(clientes) { %>
-                                    <%= clientes.find(x=>x.id === venta.id_empleado) ? clientes.find(x=>x.id ===
+                                    <%= clientes.find(x=>x.id === venta.id_cliente) ? clientes.find(x=>x.id ===
                                         venta.id_cliente).nombre : "" %>
                                         <%}%>
                             </td>
                             <td>
-                                <%= venta.fecha %>
+                                <%= (new Date(venta.fecha)).getDate() %>/<%= (new Date(venta.fecha)).getMonth() +1 %>/<%= (new Date(venta.fecha)).getFullYear() %>
                             </td>
                             <td>
                                 <%= venta.total %>
