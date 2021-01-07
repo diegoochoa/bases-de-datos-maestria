@@ -11,7 +11,7 @@ app.set('view engine', 'ejs');
 async function home(req, res) {
   const { cookies } = req;
   console.log(cookies);
-  const resultProducts = await products_controller.get_products_sitio(null, cookies.sucursal_activa);
+  const resultProducts = await products_controller.get_products_sitio('DISPONIBLE', cookies.sucursal_activa);
   const resultCustomers = await customers_controller.get();
 
   const resultEmployees = await employees_controller.get_emplopyees_pos(cookies.sucursal_activa);
@@ -26,9 +26,14 @@ async function home(req, res) {
 async function save_sell(req, res) {
   const { cookies } = req;
   const sucursal_activa = cookies.sucursal_activa;
+  const { productos } = req.body;
   const data = req.body;
+
   var totalprecio;
-  var id_producto;
+  let id_producto;
+  let id_empleado;
+  let total_atr;
+  console.log('data', req.body);
   mysqlConnection
     .getConexion('venta')
     .then((sqlconnection) => {
@@ -37,55 +42,56 @@ async function save_sell(req, res) {
           sqlconnection[0].central.query(`SELECT * FROM atributos WHERE id_fragmento = 1`, (err, rows) => {
             // if (err) res.json(err);
 
-            let id_empleado = rows[1].atributo;
-            let total_atr = rows[2].atributo;
+            id_empleado = rows[1].atributo;
+            total_atr = rows[2].atributo;
 
-            sqlconnection[i].BD1.query(`SELECT costo, id FROM producto1 WHERE id = ${data.producto}`, (err, rows) => {
-              if (err) console.log(err);
-              try {
-                totalprecio = rows[0].costo;
-                id_producto = rows[0].id;
-              } catch (err) {
-                console.log('Producto en sitio 2');
-                sqlconnection[2].BD2.query(
-                  `SELECT costo, id FROM producto2 WHERE id = ${data.producto}`,
-                  (err, rows) => {
-                    totalprecio = rows[0].costo;
-                    id_producto = rows[0].id;
-                    sqlconnection[i].BD1.query(
-                      `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${data.empleado},${rows[0].costo})`,
-                      (err, rows) => {
-                        // if (err) res.json(err);
-                      }
-                    );
-                  }
-                );
+            sqlconnection[i].BD1.query(
+              `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${req.body.numero_empleado},${req.body.venta_total})`,
+              (err, rows) => {
+                if (err) console.log(err);
               }
+            );
+            // sqlconnection[i].BD1.query(`SELECT costo, id FROM producto1 WHERE id = ${producto.id}`, (err, rows) => {
+            //   if (err) console.log(err);
+            //   try {
+            //     totalprecio = rows[0].costo;
+            //     id_producto = rows[0].id;
+            //     console.log(id_producto);
 
-              sqlconnection[i].BD1.query(
-                `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${data.empleado},${totalprecio})`,
-                (err, rows) => {
-                  // if (err) res.json(err);
-                }
-              );
-              sqlconnection[i].BD1.query(
-                `INSERT INTO detalle_venta1 (id_producto) VALUES (${id_producto})`,
-                (err, rows) => {
-                  // if (err) res.json(err);
-                }
-              );
-            });
+            //   } catch (err) {
+            //     console.log('Producto en sitio 2');
+            //     sqlconnection[2].BD2.query(`SELECT costo, id FROM producto2 WHERE id = ${producto.id}`, (err, rows) => {
+            //       totalprecio = rows[0].costo;
+            //       id_producto = rows[0].id;
+            //       console.log(rows);
+            //       sqlconnection[i].BD1.query(
+            //         `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${req.body.numero_empleado},${req.body.venta_total})`,
+            //         (err, rows) => {
+            //           if (err) console.log(err);
+            //         }
+            //       );
+            //     });
+            //   }
+            // });
           });
         } else if (sqlconnection[i].sitio == 2) {
+          console.log(req.body.numero_cliente);
           sqlconnection[0].central.query(`SELECT * FROM atributos WHERE id_fragmento = 2`, (err, rows) => {
             if (err) res.json(err);
             let id_cliente = rows[1].atributo;
-            const query = `INSERT INTO ${sqlconnection[i].tabla} (${id_cliente}) VALUES ('${data.numero_cliente}')`;
+            const query = `INSERT INTO ${sqlconnection[i].tabla} (${id_cliente}) VALUES ('${req.body.numero_cliente}')`;
             sqlconnection[i].BD2.query(query, (err, rows) => {
               if (err) console.log(err);
             });
           });
+          for (let producto of productos) {
+            let jProducto = {
+              id_producto: producto.id
+            };
+            sqlconnection[1].BD1.query(`INSERT INTO detalle_venta1 (id_producto) VALUES (${jProducto.id_producto})`);
 
+            products_controller.setStatus(producto.id, producto.id_sucursal, 'NO DISPONIBLE');
+          }
           res.redirect('/pos');
         }
       }
@@ -172,7 +178,6 @@ async function list(req, res) {
   });
 }
 
-<<<<<<< HEAD
 async function print(req, res) {
   var ventas = (query) => {
     return new Promise((resolve, reject) => {
@@ -204,21 +209,18 @@ async function print(req, res) {
                 var resultVentasSitio = await ventasSitio();
 
                 if (resultSitios.length > 0) {
-                  resultSitios.map(venta => {
-                    let venta2 = resultVentasSitio.find(x => x.id === venta.id);
+                  resultSitios.map((venta) => {
+                    let venta2 = resultVentasSitio.find((x) => x.id === venta.id);
 
                     let obj_unidos = Object.assign(venta, venta2);
 
                     return obj_unidos;
                   });
-                }
-                else
-                  resultSitios = resultSitios.concat(resultVentasSitio);
+                } else resultSitios = resultSitios.concat(resultVentasSitio);
               }
             }
             return resolve(resultSitios);
-          }
-          else {
+          } else {
             const tabla = sqlconnection.tabla;
             let query = `SELECT * FROM ${tabla}`;
 
@@ -249,9 +251,6 @@ async function print(req, res) {
   });
 }
 
-
-=======
->>>>>>> 7edff3183f2bae351108dbcdcbd13cde26cc7e17
 module.exports = {
   home,
   save_sell,

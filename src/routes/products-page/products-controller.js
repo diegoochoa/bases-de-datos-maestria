@@ -251,10 +251,8 @@ async function setStatus(id, id_sucursal, newStatus) {
 
       return;
     })
-    .catch((err) => {
+    .catch((err) => {});
 
-    });
-    
   return;
 }
 
@@ -288,9 +286,7 @@ async function get(status) {
               resultSitios = resultSitios.concat(resultProductosSitio);
             }
             return resolve(resultSitios);
-
           } else {
-
             const tabla = sqlconnection.tabla;
 
             let query = `SELECT * FROM ${tabla}`;
@@ -331,7 +327,7 @@ async function get_products_sitio(status, sitio) {
                 return new Promise((resolve, reject) => {
                   let query = `SELECT * FROM ${tabla} WHERE id_sucursal="${sitio}"`;
 
-                  if (status != null) query += ` WHERE status="${status}"`;
+                  if (status != null) query += `AND status="${status}"`;
 
                   conection.BD.query(query, (err, rows) => {
                     if (err) throw err;
@@ -380,5 +376,4 @@ module.exports = {
   get,
   get_products_sitio,
   list_inventory
-
 };
