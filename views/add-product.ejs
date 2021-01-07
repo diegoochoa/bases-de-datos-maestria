@@ -91,11 +91,11 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label>Categoría</label>
-                        <select name="id_categoria" value="<%= data.categoria %>" class="form-control"
+                        <select name="id_categoria" value="<%= data.id_categoria %>" class="form-control"
                             placeholder="Categoría">
                             <% if(categorias) { %>
                             <% for(var categoria of categorias) { %>
-                            <option value="<%= categoria.id %>"><%= categoria.nombre %></option>
+                            <option value="<%= categoria.id %>" <%= data.id_categoria == categoria.id ? 'selected' : '' %>><%= categoria.nombre %></option>
                             <% } %>
                             <% } %>
                         </select>
@@ -104,11 +104,11 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label>Sucursal</label>
-                        <select name="id_sucursal" value="<%= data.sucursal %>" class="form-control"
+                        <select name="id_sucursal" value="<%= data.id_sucursal %>" class="form-control"
                             placeholder="Sucursal">
                             <% if(sucursales) { %>
                             <% for(var sucursal of sucursales) { %>
-                            <option value="<%= sucursal.id %>"><%= sucursal.nombre %></option>
+                            <option value="<%= sucursal.id %>" <%= data.id_sucursal == sucursal.id ? 'selected' : '' %>><%= sucursal.nombre %></option>
                             <% } %>
                             <% } %>
                         </select>
