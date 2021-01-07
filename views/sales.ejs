@@ -33,6 +33,8 @@
                 <th scope="col">Cliente</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Total</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -41,16 +43,16 @@
                     <tr>
                         <td>
                             <% if(empleados) { %>
-                            <%= empleados.find(x=>x.id === venta.id_empleado) ? categorias.find(x=>x.id === venta.id_empleado).nombre : "" %>
+                            <%= empleados.find(x=>x.id === venta.id_empleado) ? empleados.find(x=>x.id === venta.id_empleado).nombre : "" %>
                             <%}%>
                         </td>
                         <td>
                             <% if(clientes) { %>
-                            <%= clientes.find(x=>x.id === venta.id_empleado) ? categorias.find(x=>x.id === venta.id_empleado).nombre : "" %>
+                            <%= clientes.find(x=>x.id === venta.id_empleado) ? clientes.find(x=>x.id === venta.id_cliente).nombre : "" %>
                             <%}%>
                         </td>
-                        <td><%= product.fecha %></td>
-                        <td><%= product.total %></td>
+                        <td><%= venta.fecha %></td>
+                        <td><%= venta.total %></td>
                         <td>
                             <a href="/pos/edit/<%= venta.id %>" type="button" class="btn btn-primary btn-sm">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-fill" fill="currentColor"

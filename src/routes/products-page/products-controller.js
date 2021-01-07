@@ -217,7 +217,7 @@ async function get(status) {
             var resultSitios = [];
 
             for (let conection of sqlconnection) {
-              const tabla = conection.tabla;
+              var tabla = conection.tabla;
 
               var productosSitio = (query) => {
                 return new Promise((resolve, reject) => {
@@ -240,14 +240,15 @@ async function get(status) {
               resultSitios = resultSitios.concat(resultProductosSitio);
             }
             return resolve(resultSitios);
-          } else {
-            const tabla = sqlconnection.tabla;
+          } 
+          else {
+            var tabla = sqlconnection.tabla;
             let query = `SELECT * FROM ${tabla}`;
 
             if (status != null)
               query += ` WHERE status="${status}"`;
 
-            sqlconnection.BD.query(`query`, (err, rows) => {
+            sqlconnection.BD.query(query, (err, rows) => {
               if (err) throw err;
 
               return resolve(rows);
