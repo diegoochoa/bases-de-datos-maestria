@@ -34,8 +34,7 @@ async function get() {
           const tabla = sqlconnection.tabla;
 
           sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
-            if (err)
-              res.json(err);
+            if (err) console.log(err);
 
               return resolve(rows);
           });

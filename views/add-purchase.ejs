@@ -10,6 +10,7 @@
                 $($("#selectProducto option")[0]).remove();
 
                 var total=0;
+                $($("table tbody")[0]).html("");
                 for(let producto of productosCompra){
                     let row = `<tr>
                                     <td>${producto.descripcion}</td>
