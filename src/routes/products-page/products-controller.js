@@ -237,6 +237,27 @@ async function update(req, res) {
   }
 }
 
+async function setStatus(id, id_sucursal, newStatus) {
+  const jStatus = {
+    status: newStatus
+  };
+
+  mysqlConnection
+    .getConexion('producto', parseInt(id_sucursal))
+    .then((sqlconnection) => {
+      const tabla = sqlconnection.tabla;
+
+      sqlconnection.BD.query(`UPDATE ${tabla} SET ? WHERE id = ?`, [jStatus, id]);
+
+      return;
+    })
+    .catch((err) => {
+
+    });
+    
+  return;
+}
+
 async function get(status) {
   var productos = (query) => {
     return new Promise((resolve, reject) => {
@@ -247,7 +268,7 @@ async function get(status) {
             var resultSitios = [];
 
             for (let conection of sqlconnection) {
-              const tabla = conection.tabla;
+              var tabla = conection.tabla;
 
               var productosSitio = (query) => {
                 return new Promise((resolve, reject) => {
@@ -267,9 +288,11 @@ async function get(status) {
               resultSitios = resultSitios.concat(resultProductosSitio);
             }
             return resolve(resultSitios);
+
           } else {
-            console.log('here');
+
             const tabla = sqlconnection.tabla;
+
             let query = `SELECT * FROM ${tabla}`;
 
             if (status != null) query += ` WHERE status="${status}"`;
@@ -328,7 +351,7 @@ async function get_products_sitio(status, sitio) {
 
             if (status != null) query += ` AND WHERE status="${status}"`;
 
-            sqlconnection.BD.query(`query`, (err, rows) => {
+            sqlconnection.BD.query(query, (err, rows) => {
               if (err) throw err;
 
               return resolve(rows);
@@ -353,7 +376,9 @@ module.exports = {
   _delete,
   edit,
   update,
+  setStatus,
   get,
   get_products_sitio,
   list_inventory
+
 };

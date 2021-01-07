@@ -61,12 +61,26 @@ async function add(req, res) {
 
 async function save(req, res) {
   const data = req.body;
+  const compra = {
+    fecha: data.fecha,
+    total: data.total
+  }
 
   mysqlConnection.getConexion("compra")
     .then(sqlconnection => {
       const tabla = sqlconnection.tabla;
 
-      sqlconnection.BD.query(`INSERT INTO ${tabla} SET ?`, [data], (err, rows) => {
+      sqlconnection.BD.query(`INSERT INTO ${tabla} SET ?`, [compra], (err, row) => {
+        for(let producto of data.productos){
+          let jProducto = {
+            id_compra: row.insertId,
+            id_producto: producto.id
+          };
+          sqlconnection.BD.query(`INSERT INTO detalle_compra1 SET ?`, [jProducto]);
+
+          productsController.setStatus(producto.id, producto.id_sucursal, "DISPONIBLE");
+        }
+
         res.redirect('/purchases');
       });
     })
@@ -86,6 +100,16 @@ async function _delete(req, res) {
       const tabla = sqlconnection.tabla;
 
       sqlconnection.BD.query(`DELETE FROM ${tabla} WHERE id = ?`, [id], (err, rows) => {
+        for(let producto of data.productos){
+          let jProducto = {
+            id_compra: row.insertId,
+            id_producto: producto.id
+          };
+          sqlconnection.BD.query(`INSERT INTO detalle_compra1 SET ?`, [jProducto]);
+
+          productsController.setStatus(producto.id, producto.id_sucursal, "ACTIVO");
+        }
+
         res.redirect('/purchases');
       });
     })

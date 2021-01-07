@@ -143,6 +143,7 @@ async function getConexion(tabla, sitio) {
                     resolve();
                     break;
                 }
+
               } else {
                 for (let fragmento of rows) {
                   switch (fragmento.sitio) {
@@ -171,6 +172,7 @@ async function getConexion(tabla, sitio) {
 
                       break;
                   }
+
                 }
                 resConection = auxResConection;
                 resolve();
