@@ -1,0 +1,39 @@
+<%- include("./partials/header") %>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-6">
+            <h4>Abonar</h4>
+        </div>
+    </div>
+</div>
+
+<div class="container bg-gray">
+    <div class="justify-content-center align-self-center">
+        <form action="/apartados/saveabonar/<%= data.id %>" method="POST">
+            <div class="form-group">
+                <label>Total</label>
+                <input type="text" class="form-control" name="total" value="<%= data.total %>">
+            </div>
+            <div class="form-group">
+                <label>Monto abonado</label>
+                <input type="text" class="form-control" name="monto_abonado" value="<%= data.monto_abonado %>">
+            </div>
+            <div class="form-group">
+                <label>Restante</label>
+                <input type="text" class="form-control" value="<%= data.total - data.monto_abonado %>" disabled>
+            </div>
+            <div class="form-group">
+                <label>Monto a Abonar</label>
+                <input type="text" class="form-control" name="abono">
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="/apartados" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                <button class="btn btn-outline-success" type="submit">Abonar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%- include("./partials/footer") %>

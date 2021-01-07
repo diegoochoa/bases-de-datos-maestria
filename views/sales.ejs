@@ -60,7 +60,7 @@
                             </td>
                             <td>
                                 <% if(clientes) { %>
-                                    <%= clientes.find(x=>x.id === venta.id_empleado) ? clientes.find(x=>x.id ===
+                                    <%= clientes.find(x=>x.id === venta.id_cliente) ? clientes.find(x=>x.id ===
                                         venta.id_cliente).nombre : "" %>
                                         <%}%>
                             </td>

@@ -14,9 +14,9 @@ router.post('/save', check_format, apartados_controller.save);
 
 router.get('/delete/:id', check_format, apartados_controller._delete);
 
-router.get('/edit/:id', check_format, apartados_controller.edit);
+router.get('/abonar/:id', check_format, apartados_controller.abonar);
 
-router.post('/update/:id', check_format, apartados_controller.update);
+router.post('/saveabonar/:id', check_format, apartados_controller.saveabonar);
 
 router.get('/detalleapartado/:id', check_format, apartados_controller.detalleApartado);
 

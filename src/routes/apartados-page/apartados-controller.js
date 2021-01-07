@@ -12,12 +12,15 @@ async function list(req, res) {
     .then(sqlconnection => {
       const tabla = sqlconnection.tabla;
 
-      sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+      sqlconnection.BD.query(`SELECT * FROM ${tabla}`, async (err, rows) => {
         if (err)
           res.json(err);
 
+        const resultCustomers = await customers_controller.get();
+
         res.render('apartados', {
-          data: rows
+          data: rows,
+          clientes: resultCustomers,
         });
       });
     })
@@ -134,44 +137,49 @@ async function _delete(req, res) {
     })
 }
 
-async function edit(req, res) {
+async function abonar(req, res) {
   const id = req.params.id;
-
-  sqlconnection.BD.query(`SELECT * FROM ${tabla} WHERE id_apartado =${id}`, async (err, rows) => {
-    if (err) res.json(err);
-
-    var productos = [];
-    for (let detalle of rows) {
-      let producto = await productsController.getById(detalle.id_producto);
-      productos.push(producto);
-    }
-
-    var resultCategorias = await categoriesController.get();
-
-    res.render('apartado-detail', {
-      data: productos,
-      folio: rows[0].id_apartado,
-      categorias: resultCategorias,
-    });
-  });
-}
-
-async function update(req, res) {
-  const id = req.params.id;
-  const data = req.body;
 
   mysqlConnection.getConexion("apartado")
     .then(sqlconnection => {
       const tabla = sqlconnection.tabla;
+      sqlconnection.BD.query(`SELECT * FROM ${tabla} WHERE id =${id}`, async (err, rows) => {
+        if (err) res.json(err);
 
-      sqlconnection.BD.query(`UPDATE ${tabla} SET ? WHERE id = ?`, [data, id], (err, rows) => {
-        res.redirect('/apartados');
+        res.render('abonar', {
+          data: rows[0]
+        });
       });
     })
     .catch(err => {
       res.status(500);
       res.redirect('/apartados');
     })
+}
+
+async function saveabonar(req, res) {
+  const id = req.params.id;
+  const montoAbonado = parseFloat(req.body.monto_abonado) + parseFloat(req.body.abono);
+  var data = {
+    monto_abonado: montoAbonado
+  };
+
+  // if (montoAbonado < req.body.total)
+    mysqlConnection.getConexion("apartado")
+      .then(sqlconnection => {
+        const tabla = sqlconnection.tabla;
+
+        sqlconnection.BD.query(`UPDATE ${tabla} SET ? WHERE id = ?`, [data, id], (err, rows) => {
+          res.redirect('/apartados');
+        });
+      })
+      .catch(err => {
+        res.status(500);
+        res.redirect('/apartados');
+      })
+  // else{
+
+  // }
 }
 
 async function detalleApartado(req, res) {
@@ -213,7 +221,7 @@ module.exports = {
   add,
   save,
   _delete,
-  edit,
-  update,
+  abonar,
+  saveabonar,
   detalleApartado
 };
