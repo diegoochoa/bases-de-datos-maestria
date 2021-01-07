@@ -13,10 +13,6 @@ async function home(req, res) {
   console.log(cookies);
   const resultProducts = await products_controller.get_products_sitio(null, cookies.sucursal_activa);
   const resultCustomers = await customers_controller.get();
-
-  const resultEmployees = await employees_controller.get();
-
-
   const resultEmployees = await employees_controller.get_emplopyees_pos(cookies.sucursal_activa);
 
   res.render('pos', {
@@ -178,7 +174,6 @@ async function list(req, res) {
   });
 }
 
-<<<<<<< HEAD
 async function print(req, res) {
   var ventas = (query) => {
     return new Promise((resolve, reject) => {
@@ -256,8 +251,6 @@ async function print(req, res) {
 }
 
 
-=======
->>>>>>> 7edff3183f2bae351108dbcdcbd13cde26cc7e17
 module.exports = {
   home,
   save_sell,
