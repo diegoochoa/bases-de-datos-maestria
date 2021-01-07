@@ -45,7 +45,7 @@ async function save_sell(req, res) {
             total_atr = rows[2].atributo;
 
             sqlconnection[i].BD1.query(
-              `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${req.body.numero_empleado},${req.body.venta_total})`,
+              `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}, status) VALUES (${req.body.numero_empleado},${req.body.venta_total}, ${req.body.tipo_envio})`,
               (err, rows) => {
                 if (err) console.log(err);
               }
@@ -79,18 +79,22 @@ async function save_sell(req, res) {
             if (err) res.json(err);
             let id_cliente = rows[1].atributo;
             const query = `INSERT INTO ${sqlconnection[i].tabla} (${id_cliente}) VALUES ('${req.body.numero_cliente}')`;
-            sqlconnection[i].BD2.query(query, (err, rows) => {
+            sqlconnection[i].BD2.query(query, (err, row) => {
               if (err) console.log(err);
+              for (let producto of productos) {
+                let jProducto = {
+                  id_venta: row.insertId,
+                  id_producto: producto.id
+                };
+                sqlconnection[1].BD1.query(
+                  `INSERT INTO detalle_venta1 (id_venta,id_producto,status) VALUES (${jProducto.id_venta},${jProducto.id_producto},${req.body.tipo_envio})`
+                );
+
+                products_controller.setStatus(producto.id, producto.id_sucursal, 'NO DISPONIBLE');
+              }
             });
           });
-          for (let producto of productos) {
-            let jProducto = {
-              id_producto: producto.id
-            };
-            sqlconnection[1].BD1.query(`INSERT INTO detalle_venta1 (id_producto) VALUES (${jProducto.id_producto})`);
 
-            products_controller.setStatus(producto.id, producto.id_sucursal, 'NO DISPONIBLE');
-          }
           res.redirect('/pos');
         }
       }
@@ -250,9 +254,53 @@ async function print(req, res) {
   });
 }
 
+async function get_to_ship() {
+  var to_ship = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('venta')
+        .then((sqlconnection) => {
+          const tabla = sqlconnection[1].tabla;
+
+          sqlconnection[1].BD1.query(`SELECT * FROM ${tabla} WHERE status=1`, (err, rows) => {
+            if (err) res.json(err);
+
+            return resolve(rows);
+          });
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
+
+  return await to_ship();
+}
+
+async function setStatus(id, newStatus) {
+  const jStatus = {
+    status: newStatus
+  };
+
+  mysqlConnection
+    .getConexion('venta')
+    .then((sqlconnection) => {
+      const tabla = sqlconnection[1].tabla;
+
+      sqlconnection[1].BD1.query(`UPDATE ${tabla} SET ? WHERE id = ?`, [jStatus, id]);
+
+      return;
+    })
+    .catch((err) => {});
+
+  return;
+}
+
 module.exports = {
   home,
   save_sell,
   list,
-  print
+  print,
+  get_to_ship,
+  setStatus
 };

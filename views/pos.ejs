@@ -10,6 +10,7 @@
             $($("#selectProducto option")[0]).remove();
 
             var total=0;
+            $($("table tbody")[0]).html("");
             for(let producto of productosVenta){
                 let row = `<tr>
                                 <td>${producto.descripcion}</td>
@@ -38,7 +39,8 @@
                     productos: productosVenta,
                     numero_cliente: $("#numero_cliente").val(),
                     numero_empleado: $("#empleado").val(),
-                    venta_total: $("#total").val()
+                    venta_total: $("#total").val(),
+                    tipo_envio: $("#tipo_envio").val()
 
                 })
             })
@@ -131,6 +133,18 @@
                         </div>
 
                         <div class="row justify-content-center mt-5">
+                            <div class="col-lg align-self-center text-left">
+                                <label>Tipo de envio</label>
+
+                                <div class="form-group">
+                                    <select name="tipo_envio" class="form-control" placeholder="Tipo envio..." id="tipo_envio">
+                                        <option value="0">Recoger en tienda</option>
+                                        <option value="1">Programar envio</option>
+                                    </select>
+                                </div>
+                   
+                            </div>
+
                             <div class="col-lg align-self-center text-left">
                                 <label>Total</label>
 

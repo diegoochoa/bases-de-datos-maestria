@@ -1,18 +1,21 @@
 const express = require('express');
 const app = express();
 const mysqlConnection = require('../../../connection');
-
+const pos_controller = require('../pos-page/pos-controller');
 app.set('view engine', 'ejs');
 
 async function add(req, res) {
+  const to_ship = await pos_controller.get_to_ship();
+  console.log(to_ship);
   res.render('add-shipment', {
-    data: null
+    data: null,
+    ship: to_ship
   });
 }
 
 async function save(req, res) {
   const data = req.body;
-
+  console.log(data);
   mysqlConnection
     .getConexion('envio')
     .then((sqlconnection) => {
@@ -21,8 +24,9 @@ async function save(req, res) {
         console.log(tabla);
         const query = `INSERT INTO ${tabla} SET ?`;
 
-        sqlconnection[i].BD.query(query, [data], (err, rows) => {
+        sqlconnection[i].BD.query(query, [data], (err, row) => {
           if (err) console.log(err);
+          pos_controller.setStatus(row.insertId, 2);
         });
       }
       res.redirect('/shipments');
