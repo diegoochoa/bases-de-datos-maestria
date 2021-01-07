@@ -18,4 +18,6 @@ router.get('/edit/:id', check_format, purchases_controller.edit);
 
 router.post('/update/:id', check_format, purchases_controller.update);
 
+router.get('/detallecompra/:id', check_format, purchases_controller.detalleCompra);
+
 module.exports = router;

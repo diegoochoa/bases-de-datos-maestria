@@ -2,16 +2,16 @@
 
     <script>
         $(document).ready(function () {
-            var productosCompra = [];
+            var productosApartado = [];
 
             $("#agregaProducto").click(function () {
                 let currentProduct = $($("#selectProducto option")[0]).data("producto");
-                productosCompra.push(currentProduct);
+                productosApartado.push(currentProduct);
                 $($("#selectProducto option")[0]).remove();
 
                 var total = 0;
                 $($("table tbody")[0]).html("");
-                for (let producto of productosCompra) {
+                for (let producto of productosApartado) {
                     let row = `<tr>
                                     <td>${producto.descripcion}</td>
                                     <td>${producto.costo}</td>
@@ -20,13 +20,13 @@
 
                     $($("table tbody")[0]).append(row);
 
-                    total += parseFloat(producto.costo);
+                    total += parseFloat(producto.precio);
                     $("#total").val(total);
                 }
             });
 
-            $("#saveCompra").click(function () {
-                fetch('http://127.0.0.1:3000/purchases/save/', {
+            $("#saveApartado").click(function () {
+                fetch('http://127.0.0.1:3000/apartados/save/', {
                     method: 'POST',
                     mode: 'cors',
                     cache: 'no-cache',
@@ -37,13 +37,16 @@
                     redirect: 'follow',
                     referrerPolicy: 'no-referrer',
                     body: JSON.stringify({
-                        productos: productosCompra,
+                        productos: productosApartado,
                         fecha: $("#fecha").val(),
+                        fecha_limite: $("#fecha_limite").val(),
+                        id_cliente: $("#id_cliente").val(),
+                        monto_abonado: $("#monto_abonado").val(),
                         total: $("#total").val(),
                     })
                 })
                     .then(response => {
-                        location.href = "http://127.0.0.1:3000/purchases";
+                        location.href = "http://127.0.0.1:3000/apartados";
                     })
             });
         });
@@ -52,7 +55,7 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-6">
-                <h4>Agregar Compra</h4>
+                <h4>Agregar Apartado</h4>
             </div>
         </div>
     </div>
@@ -107,13 +110,38 @@
                     </tbody>
                 </table>
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-4">
                         <div class="form-group">
                             <label>Fecha</label>
                             <input type="date" id="fecha" class="form-control" placeholder="Fecha">
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Fecha Límite</label>
+                            <input type="date" id="fecha_limite" class="form-control" placeholder="Fecha">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label>Cliente</label>
+                        <div class="form-group">
+                            <select id="id_cliente" name="id_cliente" class="form-control" placeholder="Cliente...">
+                                <% if(clientes) { %>
+                                <% for(var cliente of clientes) { %>
+                                <option value="<%= cliente.id %>"><%= cliente.nombre + " " + cliente.apellido_paterno + " " + cliente.apellido_materno %></option>
+                                <% } %>
+                                <% } %>
+                            </select>
+                        </div>
+           
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Monto abonado</label>
+                            <input type="number" id="monto_abonado" class="form-control" placeholder="Abonado">
+                        </div>
+                    </div>
+                    <div class="col-4">
                         <div class="form-group">
                             <label>Total</label>
                             <input type="number" id="total" class="form-control" placeholder="Total">
@@ -121,8 +149,8 @@
                     </div>
                 </div>
                 <div class="mt-4 text-right">
-                    <a href="/purchases" class="btn btn-outline-secondary" type="submit">Cancelar</a>
-                    <button class="btn btn-outline-success" type="button" id="saveCompra">Crear Compra</button>
+                    <a href="/apartados" class="btn btn-outline-secondary" type="submit">Cancelar</a>
+                    <button class="btn btn-outline-success" type="button" id="saveApartado">Crear Apartado</button>
                 </div>
             </form>
         </div>

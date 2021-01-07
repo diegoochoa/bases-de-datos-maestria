@@ -3,16 +3,16 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-6">
-                <h4>Compras</h4>
+                <h4>Apartados</h4>
             </div>
             <div class="col-6 text-right">
-                <a class="btn btn-outline-success" href="/purchases/add">
+                <a class="btn btn-outline-success" href="/apartados/add">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd"
                             d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                     </svg>
-                    Agregar Compra</a>
+                    Agregar Apartado</a>
             </div>
         </div>
 
@@ -38,34 +38,53 @@
                 <tr>
                     <th scope="col">Folio</th>
                     <th scope="col">Fecha</th>
+                    <th scope="col">Fecha Límite</th>
+                    <th scope="col">Monto Abonado</th>
                     <th scope="col">Total</th>
+                    <th scope="col">Restante</th>
+                    <th scope="col">Cliente</th>
                     <th scope="col">Productos</th>
                     <!-- <th scope="col"></th> -->
+                    <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 <% if(data) { %>
-                    <% for(var purchase of data) { %>
+                    <% for(var apartado of data) { %>
                         <tr>
-                            <th scope="row"><%= purchase.id %> </th>
-                            <th><%= (new Date(purchase.fecha)).getDate() %>/<%= (new Date(purchase.fecha)).getMonth() +1 %>/<%= (new Date(purchase.fecha)).getFullYear() %></th>
-                            <td><%= purchase.total %></td>
-                            <td>
-                                <a href="/purchases/detallecompra/<%= purchase.id %>">Ver Productos</a>
+                            <th scope="row">
+                                <%= apartado.id %>
+                            </th>
+                            <th>
+                                <%= (new Date(apartado.fecha)).getDate() %>/<%= (new Date(apartado.fecha)).getMonth() +1
+                                        %>/<%= (new Date(apartado.fecha)).getFullYear() %>
+                            </th>
+                            <th>
+                                <%= (new Date(apartado.fecha_limite)).getDate() %>/<%= (new
+                                        Date(apartado.fecha_limite)).getMonth() +1 %>/<%= (new
+                                            Date(apartado.fecha_limite)).getFullYear() %>
+                            </th>
+                            <td>$<%= apartado.monto_abonado %>
                             </td>
-                            <!-- <td>
-                                <a href="/purchases/edit/<%= purchase.id %>" type="button"
-                                    class="btn btn-primary btn-sm">
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-fill"
-                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
-                                    </svg>
-                                    </button>
-                            </td> -->
+                            <td>$<%= apartado.total %>
+                            </td>
+                            <td>$<%= apartado.total - apartado.monto_abonado %>
+                            </td>
                             <td>
-                                <a href="/purchases/delete/<%= purchase.id %>" type="button"
+                                <% if(clientes) { %>
+                                    <%= clientes.find(x=>x.id === apartado.id_cliente) ? clientes.find(x=>x.id ===
+                                        apartado.id_cliente).nombre : "" %>
+                                        <%}%>
+                            </td>
+                            <td>
+                                <a href="/apartados/detalleapartado/<%= apartado.id %>">Ver Productos</a>
+                            </td>
+                            <td>
+                                <a href="/apartados/abonar/<%= apartado.id %>" type="button" class="btn btn-primary btn-sm"> Abonar</a>
+                            </td>
+                            <td>
+                                <a href="/apartados/delete/<%= apartado.id %>" type="button"
                                     class="btn btn-danger btn-sm">
                                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill"
                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">

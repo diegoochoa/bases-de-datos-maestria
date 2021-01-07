@@ -253,6 +253,9 @@ async function setStatus(id, id_sucursal, newStatus) {
     })
     .catch((err) => {});
 
+
+    });
+
   return;
 }
 
@@ -293,7 +296,7 @@ async function get(status) {
 
             if (status != null) query += ` WHERE status="${status}"`;
 
-            sqlconnection.BD.query(`query`, (err, rows) => {
+            sqlconnection.BD.query(query, (err, rows) => {
               if (err) throw err;
 
               return resolve(rows);
@@ -309,6 +312,61 @@ async function get(status) {
   var resultProductos = await productos();
 
   return resultProductos;
+}
+
+async function getById(id) {
+  var producto = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('producto', null)
+        .then(async (sqlconnection) => {
+          if (Array.isArray(sqlconnection)) {
+            var result = [];
+
+            for (let conection of sqlconnection) {
+              var tabla = conection.tabla;
+
+              var productosSitio = (query) => {
+                return new Promise((resolve, reject) => {
+                  let query = `SELECT * FROM ${tabla} WHERE id="${id}"`;
+
+                  conection.BD.query(query, (err, rows) => {
+                    if (err) throw err;
+
+                    return resolve(rows);
+                  });
+                });
+              };
+
+              var resultProducto = await productosSitio();
+              if (resultProducto.length > 0) {
+                result = resultProducto[0];
+                break;
+              }
+            }
+            return resolve(result);
+
+          }
+          else {
+            const tabla = sqlconnection.tabla;
+            let query = `SELECT * FROM ${tabla} WHERE id="${id}"`;
+
+            sqlconnection.BD.query(query, (err, rows) => {
+              if (err) throw err;
+
+              return resolve(rows[0]);
+            });
+          }
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
+
+  var resultProducto = await producto();
+
+  return resultProducto;
 }
 
 async function get_products_sitio(status, sitio) {
@@ -327,7 +385,8 @@ async function get_products_sitio(status, sitio) {
                 return new Promise((resolve, reject) => {
                   let query = `SELECT * FROM ${tabla} WHERE id_sucursal="${sitio}"`;
 
-                  if (status != null) query += `AND status="${status}"`;
+                  if (status != null) query += ` AND status="${status}"`;
+
 
                   conection.BD.query(query, (err, rows) => {
                     if (err) throw err;
@@ -345,7 +404,7 @@ async function get_products_sitio(status, sitio) {
             const tabla = sqlconnection.tabla;
             let query = `SELECT * FROM ${tabla}"`;
 
-            if (status != null) query += ` AND WHERE status="${status}"`;
+            if (status != null) query += ` WHERE status="${status}"`;
 
             sqlconnection.BD.query(query, (err, rows) => {
               if (err) throw err;
@@ -374,6 +433,7 @@ module.exports = {
   update,
   setStatus,
   get,
+  getById,
   get_products_sitio,
   list_inventory
 };
