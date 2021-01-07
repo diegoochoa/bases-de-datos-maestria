@@ -10,8 +10,8 @@ const categories_page_router = require('./categories-page');
 const branch_offices_page_roter = require('./branch-offices-page');
 const customes_page_router = require('./customers-page');
 const employees_page_router = require('./employees-page');
-
 const purchases_page_router = require('./purchases-page');
+const apartados_page_router = require('./apartados-page');
 const balance_page_router = require('./balance-page');
 
 const is_auth = require('../middlewares/is_auth');
@@ -35,6 +35,8 @@ router.use('/customers', is_auth, customes_page_router);
 router.use('/employees', is_auth, employees_page_router);
 
 router.use('/purchases', purchases_page_router);
+
+router.use('/apartados', apartados_page_router);
 
 router.use('/balance', balance_page_router);
 

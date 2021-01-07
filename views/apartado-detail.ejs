@@ -1,0 +1,50 @@
+<%- include("./partials/header") %>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-6">
+            <h4>Detalle de Apartado de Folio: <%= folio %></h4>
+        </div>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Descripción</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">Costo</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Talla</th>
+                <th scope="col">Marca</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if(data) { %>
+                <% for(var product of data) { %>
+                    <tr>
+                    <td scope="row"><%= product.descripcion %></td>
+                    <td>
+                        <% if(categorias) { %>
+                        <%= categorias.find(x=>x.id === product.id_categoria) ? categorias.find(x=>x.id === product.id_categoria).nombre : "" %>
+                        <%}%>
+                    </td>
+                    <td>$<%= product.costo %></td>
+                    <td>$<%= product.precio %></td>
+                    <td><%= product.talla %></td>
+                    <td><%= product.marca %></td>
+                </tr>
+                <% } %>
+                <% } %>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th scope="row" colspan="3">Total</th>
+                <% if(data) { %>
+                    <th>$<%= data.map(x=> x.precio).reduce((a,b) => a + b, 0) %></th>
+                <% } %>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<%- include("./partials/footer") %>
