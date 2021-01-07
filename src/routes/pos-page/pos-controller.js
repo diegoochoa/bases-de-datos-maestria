@@ -14,9 +14,6 @@ async function home(req, res) {
   const resultProducts = await products_controller.get_products_sitio(null, cookies.sucursal_activa);
   const resultCustomers = await customers_controller.get();
 
-  const resultEmployees = await employees_controller.get();
-
-
   const resultEmployees = await employees_controller.get_emplopyees_pos(cookies.sucursal_activa);
 
   res.render('pos', {
@@ -133,21 +130,18 @@ async function list(req, res) {
                 var resultVentasSitio = await ventasSitio();
 
                 if (resultSitios.length > 0) {
-                  resultSitios.map(venta => {
-                    let venta2 = resultVentasSitio.find(x => x.id === venta.id);
+                  resultSitios.map((venta) => {
+                    let venta2 = resultVentasSitio.find((x) => x.id === venta.id);
 
                     let obj_unidos = Object.assign(venta, venta2);
 
                     return obj_unidos;
                   });
-                }
-                else
-                  resultSitios = resultSitios.concat(resultVentasSitio);
+                } else resultSitios = resultSitios.concat(resultVentasSitio);
               }
             }
             return resolve(resultSitios);
-          }
-          else {
+          } else {
             const tabla = sqlconnection.tabla;
             let query = `SELECT * FROM ${tabla}`;
 
