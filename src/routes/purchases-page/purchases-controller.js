@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mysqlConnection = require('../../../connection');
 const productsController = require('../products-page/products-controller');
+const categoriesController = require('../categories-page/categories-controller');
 
 app.set('view engine', 'ejs');
 
@@ -38,7 +39,7 @@ async function get() {
             if (err)
               res.json(err);
 
-              return resolve(rows);
+            return resolve(rows);
           });
         })
         .catch(err => {
@@ -71,7 +72,7 @@ async function save(req, res) {
       const tabla = sqlconnection.tabla;
 
       sqlconnection.BD.query(`INSERT INTO ${tabla} SET ?`, [compra], (err, row) => {
-        for(let producto of data.productos){
+        for (let producto of data.productos) {
           let jProducto = {
             id_compra: row.insertId,
             id_producto: producto.id
@@ -100,7 +101,7 @@ async function _delete(req, res) {
       const tabla = sqlconnection.tabla;
 
       sqlconnection.BD.query(`DELETE FROM ${tabla} WHERE id = ?`, [id], (err, rows) => {
-        for(let producto of data.productos){
+        for (let producto of data.productos) {
           let jProducto = {
             id_compra: row.insertId,
             id_producto: producto.id
@@ -156,6 +157,39 @@ async function update(req, res) {
     })
 }
 
+async function detalleCompra(req, res) {
+  const id = req.params.id;
+
+  mysqlConnection.getConexion("detalle_compra")
+    .then(sqlconnection => {
+      const tabla = sqlconnection.tabla;
+
+      sqlconnection.BD.query(`SELECT * FROM ${tabla}`, async (err, rows) => {
+        if (err) res.json(err);
+
+        var productos = [];
+        for (let detalle of rows) {
+          let producto = await productsController.getById(detalle.id_producto);
+          productos.push(producto);
+        }
+
+        var resultCategorias = await categoriesController.get();
+
+        res.render('purchase-detail', {
+          data: productos,
+          folio: rows[0].id_compra,
+          categorias: resultCategorias,
+        });
+      });
+    })
+    .catch(err => {
+      res.status(500);
+      res.render('purchase-detail', {
+        data: []
+      });
+    })
+}
+
 module.exports = {
   list,
   get,
@@ -163,5 +197,6 @@ module.exports = {
   save,
   _delete,
   edit,
-  update
+  update,
+  detalleCompra
 };

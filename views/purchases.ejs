@@ -52,7 +52,7 @@
                             <th><%= (new Date(purchase.fecha)).getDate() %>/<%= (new Date(purchase.fecha)).getMonth() +1 %>/<%= (new Date(purchase.fecha)).getFullYear() %></th>
                             <td><%= purchase.total %></td>
                             <td>
-                                <a href="">Ver Productos</a>
+                                <a href="/purchases/detallecompra/<%= purchase.id %>">Ver Productos</a>
                             </td>
                             <!-- <td>
                                 <a href="/purchases/edit/<%= purchase.id %>" type="button"
