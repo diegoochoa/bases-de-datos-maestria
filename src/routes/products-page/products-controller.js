@@ -342,9 +342,7 @@ async function getById(id) {
               }
             }
             return resolve(result);
-
-          }
-          else {
+          } else {
             const tabla = sqlconnection.tabla;
             let query = `SELECT * FROM ${tabla} WHERE id="${id}"`;
 
@@ -383,7 +381,6 @@ async function get_products_sitio(status, sitio) {
                   let query = `SELECT * FROM ${tabla} WHERE id_sucursal="${sitio}"`;
 
                   if (status != null) query += ` AND status="${status}"`;
-
 
                   conection.BD.query(query, (err, rows) => {
                     if (err) throw err;

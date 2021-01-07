@@ -45,7 +45,7 @@ async function save_sell(req, res) {
             total_atr = rows[2].atributo;
 
             sqlconnection[i].BD1.query(
-              `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}) VALUES (${req.body.numero_empleado},${req.body.venta_total})`,
+              `INSERT INTO ${sqlconnection[i].tabla} (${id_empleado}, ${total_atr}, status) VALUES (${req.body.numero_empleado},${req.body.venta_total}, ${req.body.tipo_envio})`,
               (err, rows) => {
                 if (err) console.log(err);
               }
@@ -79,18 +79,22 @@ async function save_sell(req, res) {
             if (err) res.json(err);
             let id_cliente = rows[1].atributo;
             const query = `INSERT INTO ${sqlconnection[i].tabla} (${id_cliente}) VALUES ('${req.body.numero_cliente}')`;
-            sqlconnection[i].BD2.query(query, (err, rows) => {
+            sqlconnection[i].BD2.query(query, (err, row) => {
               if (err) console.log(err);
+              for (let producto of productos) {
+                let jProducto = {
+                  id_venta: row.insertId,
+                  id_producto: producto.id
+                };
+                sqlconnection[1].BD1.query(
+                  `INSERT INTO detalle_venta1 (id_venta,id_producto,status) VALUES (${jProducto.id_venta},${jProducto.id_producto},${req.body.tipo_envio})`
+                );
+
+                products_controller.setStatus(producto.id, producto.id_sucursal, 'NO DISPONIBLE');
+              }
             });
           });
-          for (let producto of productos) {
-            let jProducto = {
-              id_producto: producto.id
-            };
-            sqlconnection[1].BD1.query(`INSERT INTO detalle_venta1 (id_producto) VALUES (${jProducto.id_producto})`);
 
-            products_controller.setStatus(producto.id, producto.id_sucursal, 'NO DISPONIBLE');
-          }
           res.redirect('/pos');
         }
       }
@@ -177,71 +181,6 @@ async function list(req, res) {
   });
 }
 
-async function get() {
-  var ventas = (query) => {
-    return new Promise((resolve, reject) => {
-      mysqlConnection
-        .getConexion('venta', null)
-        .then(async (sqlconnection) => {
-          if (Array.isArray(sqlconnection)) {
-            var resultSitios = [];
-
-            for (let conection of sqlconnection) {
-              if (conection.tabla !== undefined) {
-                var tabla = conection.tabla;
-
-                var ventasSitio = (query) => {
-                  return new Promise((resolve, reject) => {
-                    let query = `SELECT * FROM ${tabla}`;
-
-                    // if (status != null)
-                    //   query += ` WHERE status="${status}"`;
-
-                    conection.BD.query(query, (err, rows) => {
-                      if (err) throw err;
-
-                      return resolve(rows);
-                    });
-                  });
-                };
-
-                var resultVentasSitio = await ventasSitio();
-
-                if (resultSitios.length > 0) {
-                  resultSitios.map((venta) => {
-                    let venta2 = resultVentasSitio.find((x) => x.id === venta.id);
-
-                    let obj_unidos = Object.assign(venta, venta2);
-
-                    return obj_unidos;
-                  });
-                } else resultSitios = resultSitios.concat(resultVentasSitio);
-              }
-            }
-            return resolve(resultSitios);
-          } else {
-            const tabla = sqlconnection.tabla;
-            let query = `SELECT * FROM ${tabla}`;
-
-            // if (status != null)
-            //   query += ` WHERE status="${status}"`;
-
-            sqlconnection.BD.query(query, (err, rows) => {
-              if (err) throw err;
-
-              return resolve(rows);
-            });
-          }
-        })
-        .catch((err) => {
-          return resolve([]);
-        });
-    });
-  };
-
-  return await ventas();
-}
-
 async function print(req, res) {
   var ventas = (query) => {
     return new Promise((resolve, reject) => {
@@ -315,34 +254,77 @@ async function print(req, res) {
   });
 }
 
-async function getDetalleVenta() {
-  var compras = (query) => {
+async function get_to_ship() {
+  var to_ship = (query) => {
     return new Promise((resolve, reject) => {
-      mysqlConnection.getConexion("detalle_venta")
-        .then(sqlconnection => {
-          const tabla = sqlconnection.tabla;
+      mysqlConnection
+        .getConexion('venta')
+        .then((sqlconnection) => {
+          const tabla = sqlconnection[1].tabla;
 
-          sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
-            if (err)
-              res.json(err);
+          sqlconnection[1].BD1.query(`SELECT * FROM ${tabla} WHERE status=1`, (err, rows) => {
+            if (err) res.json(err);
 
             return resolve(rows);
           });
         })
-        .catch(err => {
+        .catch((err) => {
           return resolve([]);
-        })
+        });
     });
-  }
+  };
+
+  return await to_ship();
+}
+
+async function getDetalleVenta() {
+  var compras = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('detalle_venta')
+        .then((sqlconnection) => {
+          const tabla = sqlconnection.tabla;
+
+          sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+            if (err) res.json(err);
+
+            return resolve(rows);
+          });
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
 
   return await compras();
+}
+
+async function setStatus(id, newStatus) {
+  const jStatus = {
+    status: newStatus
+  };
+
+  mysqlConnection
+    .getConexion('venta')
+    .then((sqlconnection) => {
+      const tabla = sqlconnection[1].tabla;
+
+      sqlconnection[1].BD1.query(`UPDATE ${tabla} SET ? WHERE id = ?`, [jStatus, id]);
+
+      return;
+    })
+    .catch((err) => {});
+
+  return;
 }
 
 module.exports = {
   home,
   save_sell,
   list,
-  get,
   print,
+  get_to_ship,
+  setStatus,
   getDetalleVenta
 };
