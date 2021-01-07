@@ -51,6 +51,29 @@ async function get() {
   return await compras();
 }
 
+async function getDetalleCompra() {
+  var compras = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection.getConexion("detalle_compra")
+        .then(sqlconnection => {
+          const tabla = sqlconnection.tabla;
+
+          sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+            if (err)
+              res.json(err);
+
+            return resolve(rows);
+          });
+        })
+        .catch(err => {
+          return resolve([]);
+        })
+    });
+  }
+
+  return await compras();
+}
+
 async function add(req, res) {
   const resultProducts = await productsController.get("ACTIVO");
 
@@ -204,6 +227,7 @@ async function detalleCompra(req, res) {
 module.exports = {
   list,
   get,
+  getDetalleCompra,
   add,
   save,
   _delete,
