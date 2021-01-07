@@ -87,6 +87,7 @@ async function getConexion(tabla, sitio) {
 
                     con = {
                       BD1: conexionSitio1,
+                      BD: conexionSitio1,
                       tabla: fragmento.nombre,
                       sitio: fragmento.sitio
                     };
@@ -100,6 +101,7 @@ async function getConexion(tabla, sitio) {
                     });
                     con = {
                       BD2: conexionSitio2,
+                      BD: conexionSitio2,
                       tabla: fragmento.nombre,
                       sitio: fragmento.sitio
                     };
