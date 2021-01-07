@@ -186,6 +186,27 @@ async function update(req, res) {
   }
 }
 
+async function setStatus(id, id_sucursal, newStatus) {
+  const jStatus = {
+    status: newStatus
+  };
+
+  mysqlConnection
+    .getConexion('producto', parseInt(id_sucursal))
+    .then((sqlconnection) => {
+      const tabla = sqlconnection.tabla;
+
+      sqlconnection.BD.query(`UPDATE ${tabla} SET ? WHERE id = ?`, [jStatus, id]);
+
+      return;
+    })
+    .catch((err) => {
+
+    });
+    
+  return;
+}
+
 async function get(status) {
   var productos = (query) => {
     return new Promise((resolve, reject) => {
@@ -209,7 +230,7 @@ async function get(status) {
                   conection.BD.query(query, (err, rows) => {
                     if (err) throw err;
 
-      
+
                     return resolve(rows);
                   });
                 });
@@ -251,5 +272,6 @@ module.exports = {
   _delete,
   edit,
   update,
+  setStatus,
   get
 };
