@@ -177,6 +177,71 @@ async function list(req, res) {
   });
 }
 
+async function get() {
+  var ventas = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('venta', null)
+        .then(async (sqlconnection) => {
+          if (Array.isArray(sqlconnection)) {
+            var resultSitios = [];
+
+            for (let conection of sqlconnection) {
+              if (conection.tabla !== undefined) {
+                var tabla = conection.tabla;
+
+                var ventasSitio = (query) => {
+                  return new Promise((resolve, reject) => {
+                    let query = `SELECT * FROM ${tabla}`;
+
+                    // if (status != null)
+                    //   query += ` WHERE status="${status}"`;
+
+                    conection.BD.query(query, (err, rows) => {
+                      if (err) throw err;
+
+                      return resolve(rows);
+                    });
+                  });
+                };
+
+                var resultVentasSitio = await ventasSitio();
+
+                if (resultSitios.length > 0) {
+                  resultSitios.map((venta) => {
+                    let venta2 = resultVentasSitio.find((x) => x.id === venta.id);
+
+                    let obj_unidos = Object.assign(venta, venta2);
+
+                    return obj_unidos;
+                  });
+                } else resultSitios = resultSitios.concat(resultVentasSitio);
+              }
+            }
+            return resolve(resultSitios);
+          } else {
+            const tabla = sqlconnection.tabla;
+            let query = `SELECT * FROM ${tabla}`;
+
+            // if (status != null)
+            //   query += ` WHERE status="${status}"`;
+
+            sqlconnection.BD.query(query, (err, rows) => {
+              if (err) throw err;
+
+              return resolve(rows);
+            });
+          }
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
+
+  return await ventas();
+}
+
 async function print(req, res) {
   var ventas = (query) => {
     return new Promise((resolve, reject) => {
@@ -250,9 +315,34 @@ async function print(req, res) {
   });
 }
 
+async function getDetalleVenta() {
+  var compras = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection.getConexion("detalle_venta")
+        .then(sqlconnection => {
+          const tabla = sqlconnection.tabla;
+
+          sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+            if (err)
+              res.json(err);
+
+            return resolve(rows);
+          });
+        })
+        .catch(err => {
+          return resolve([]);
+        })
+    });
+  }
+
+  return await compras();
+}
+
 module.exports = {
   home,
   save_sell,
   list,
-  print
+  get,
+  print,
+  getDetalleVenta
 };

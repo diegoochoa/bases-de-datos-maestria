@@ -253,9 +253,6 @@ async function setStatus(id, id_sucursal, newStatus) {
     })
     .catch((err) => {});
 
-
-    });
-
   return;
 }
 
