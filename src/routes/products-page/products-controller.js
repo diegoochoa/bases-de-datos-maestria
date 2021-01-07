@@ -32,8 +32,7 @@ async function list(req, res) {
               resultSitios = resultSitios.concat(resultProductosSitio);
             }
             return resolve(resultSitios);
-          }
-          else {
+          } else {
             const tabla = sqlconnection.tabla;
             sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
               if (err) res.json(err);
@@ -53,6 +52,58 @@ async function list(req, res) {
   var resultSucursales = await branchOfficesController.get();
 
   res.render('products', {
+    data: resultProductos,
+    categorias: resultCategorias,
+    sucursales: resultSucursales
+  });
+}
+
+async function list_inventory(req, res) {
+  var productos = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('producto', null)
+        .then(async (sqlconnection) => {
+          if (Array.isArray(sqlconnection)) {
+            var resultSitios = [];
+
+            for (let conection of sqlconnection) {
+              const tabla = conection.tabla;
+
+              var productosSitio = (query) => {
+                return new Promise((resolve, reject) => {
+                  conection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+                    if (err) res.json(err);
+
+                    return resolve(rows);
+                  });
+                });
+              };
+
+              var resultProductosSitio = await productosSitio();
+              resultSitios = resultSitios.concat(resultProductosSitio);
+            }
+            return resolve(resultSitios);
+          } else {
+            const tabla = sqlconnection.tabla;
+            sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+              if (err) res.json(err);
+
+              return resolve(rows);
+            });
+          }
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
+
+  var resultProductos = await productos();
+  var resultCategorias = await categoriesController.get();
+  var resultSucursales = await branchOfficesController.get();
+
+  res.render('inventory', {
     data: resultProductos,
     categorias: resultCategorias,
     sucursales: resultSucursales
@@ -221,15 +272,12 @@ async function get(status) {
 
               var productosSitio = (query) => {
                 return new Promise((resolve, reject) => {
-
                   let query = `SELECT * FROM ${tabla}`;
 
-                  if (status != null)
-                    query += ` WHERE status="${status}"`;
+                  if (status != null) query += ` WHERE status="${status}"`;
 
                   conection.BD.query(query, (err, rows) => {
                     if (err) throw err;
-
 
                     return resolve(rows);
                   });
@@ -240,13 +288,68 @@ async function get(status) {
               resultSitios = resultSitios.concat(resultProductosSitio);
             }
             return resolve(resultSitios);
-          } 
-          else {
-            var tabla = sqlconnection.tabla;
+
+          } else {
+
+            const tabla = sqlconnection.tabla;
+
             let query = `SELECT * FROM ${tabla}`;
 
-            if (status != null)
-              query += ` WHERE status="${status}"`;
+            if (status != null) query += ` WHERE status="${status}"`;
+
+            sqlconnection.BD.query(`query`, (err, rows) => {
+              if (err) throw err;
+
+              return resolve(rows);
+            });
+          }
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
+
+  var resultProductos = await productos();
+
+  return resultProductos;
+}
+
+async function get_products_sitio(status, sitio) {
+  var productos = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('producto', null)
+        .then(async (sqlconnection) => {
+          if (Array.isArray(sqlconnection)) {
+            var resultSitios = [];
+
+            for (let conection of sqlconnection) {
+              const tabla = conection.tabla;
+
+              var productosSitio = (query) => {
+                return new Promise((resolve, reject) => {
+                  let query = `SELECT * FROM ${tabla} WHERE id_sucursal="${sitio}"`;
+
+                  if (status != null) query += ` WHERE status="${status}"`;
+
+                  conection.BD.query(query, (err, rows) => {
+                    if (err) throw err;
+
+                    return resolve(rows);
+                  });
+                });
+              };
+
+              var resultProductosSitio = await productosSitio();
+              resultSitios = resultSitios.concat(resultProductosSitio);
+            }
+            return resolve(resultSitios);
+          } else {
+            const tabla = sqlconnection.tabla;
+            let query = `SELECT * FROM ${tabla}"`;
+
+            if (status != null) query += ` AND WHERE status="${status}"`;
 
             sqlconnection.BD.query(query, (err, rows) => {
               if (err) throw err;
@@ -274,5 +377,8 @@ module.exports = {
   edit,
   update,
   setStatus,
-  get
+  get,
+  get_products_sitio,
+  list_inventory
+
 };

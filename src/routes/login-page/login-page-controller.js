@@ -57,7 +57,7 @@ async function login_page_controller(req, res) {
 async function validate_login(req, res, next) {
   var data;
   if (req.body.username === 'admin') {
-    res.cookie('hola', req.body.username);
+    res.cookie('usuario_activo', req.body.username);
     next();
   } else {
     mysqlConnection.getConexion('empleado').then((sqlconnection) => {
@@ -72,9 +72,11 @@ async function validate_login(req, res, next) {
           console.log(data);
           if (data.sucursal === 1) {
             res.cookie('sucursal_activa', 1);
+            res.cookie('usuario_activo', req.body.username);
             next();
           } else if (data.sucursal === 2) {
             res.cookie('sucursal_activa', 2);
+            res.cookie('usuario_activo', req.body.username);
             next();
           }
         }
@@ -85,7 +87,7 @@ async function validate_login(req, res, next) {
 
 async function validateCookies(req, res, next) {
   const { cookies } = req;
-  console.log(cookies);
+
   res.render('home');
   next();
 }
