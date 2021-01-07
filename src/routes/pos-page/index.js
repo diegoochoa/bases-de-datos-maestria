@@ -12,5 +12,6 @@ router.post('/save_sell', check_format, pos_page_controller.save_sell);
 
 router.get('/sales', check_format, pos_page_controller.list);
 
+router.get('/sales/print', check_format, pos_page_controller.print);
 
 module.exports = router;
