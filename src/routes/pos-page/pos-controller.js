@@ -277,6 +277,29 @@ async function get_to_ship() {
   return await to_ship();
 }
 
+async function getDetalleVenta() {
+  var compras = (query) => {
+    return new Promise((resolve, reject) => {
+      mysqlConnection
+        .getConexion('detalle_venta')
+        .then((sqlconnection) => {
+          const tabla = sqlconnection.tabla;
+
+          sqlconnection.BD.query(`SELECT * FROM ${tabla}`, (err, rows) => {
+            if (err) res.json(err);
+
+            return resolve(rows);
+          });
+        })
+        .catch((err) => {
+          return resolve([]);
+        });
+    });
+  };
+
+  return await compras();
+}
+
 async function setStatus(id, newStatus) {
   const jStatus = {
     status: newStatus
@@ -302,5 +325,6 @@ module.exports = {
   list,
   print,
   get_to_ship,
-  setStatus
+  setStatus,
+  getDetalleVenta
 };

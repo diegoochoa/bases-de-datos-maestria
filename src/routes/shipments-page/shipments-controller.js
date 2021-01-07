@@ -122,6 +122,40 @@ async function update(req, res) {
     });
 }
 
+// async function detalleCompra(req, res) {
+//   const id = req.params.id;
+
+//   mysqlConnection
+//     .getConexion('detalle_compra')
+//     .then((sqlconnection) => {
+//       const tabla = sqlconnection.tabla;
+
+//       sqlconnection.BD.query(`SELECT * FROM ${tabla} WHERE id_compra =${id}`, async (err, rows) => {
+//         if (err) res.json(err);
+
+//         var productos = [];
+//         for (let detalle of rows) {
+//           let producto = await productsController.getById(detalle.id_producto);
+//           productos.push(producto);
+//         }
+
+//         var resultCategorias = await categoriesController.get();
+
+//         res.render('envio-detail', {
+//           data: productos,
+//           folio: rows[0].id_compra,
+//           categorias: resultCategorias
+//         });
+//       });
+//     })
+//     .catch((err) => {
+//       res.status(500);
+//       res.render('envio-detail', {
+//         data: []
+//       });
+//     });
+// }
+
 module.exports = {
   add,
   save,
